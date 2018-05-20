@@ -23,6 +23,15 @@ class FlightSearch extends Component{
 		this.render_Search=this.render_Search.bind(this);
 		this.validateForm=this.validateForm.bind(this);
 		this.formatDate=this.formatDate.bind(this);
+		this.handle_scroll = this.handle_scroll.bind(this);
+	}
+	handle_scroll(){
+		var elemnt=document.getElementById('resultList');
+		if(elemnt===undefined){
+			console.log('undefined vai');
+		}
+		elemnt.scrollIntoView();
+		return;
 	}
 	setParams(p){
 		//do something with this searchVal query using API
@@ -185,6 +194,7 @@ class FlightSearch extends Component{
 				</div>
 			);
 		}
+
 		return ret;
 	}
 
@@ -209,7 +219,8 @@ class FlightSearch extends Component{
 		}
 		var backup=(<img className="w3-image" src="\images\img1.jpg" alt="London" />);
 		var elems=(
-			<header className="w3-container w3-display-container  w3-hide-small" style={mxWidthStyle}>
+			<header className="w3-content w3-display-container  w3-hide-small" style={mxWidthStyle}>
+			<img className="w3-image" src="\images\img1.jpg" alt="London" />
 			  <div className="w3-display-topmiddle wdth65">
 				<div className="w3-bar w3-black">
 				  <button className="w3-bar-item w3-button tablink w3-red" ><i className="fa fa-plane w3-margin-right"></i>Flight</button>
@@ -312,13 +323,25 @@ class FlightSearch extends Component{
 		);
 		return elems;
 	}
+	componentDidMount(){
+		if(this.state.params==1){
+			this.handle_scroll();
+		}
+		return;
+	}
+	componentDidUpdate(){
+		if(this.state.params==1){
+			this.handle_scroll();
+		}
+		return;
+	}
 	render(){
 		return(
 			<div >
 				<div>
 					{this.render_Search()}
 				</div>
-				<div>
+				<div id='resultList'>
 					{this.render_SearchResult()}
 				</div>
 			</div>
