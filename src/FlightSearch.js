@@ -119,30 +119,8 @@ class FlightSearch extends Component{
 					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
 						<div className="w3-col w3-center w3-padding" style={wd_20}>
 						  <p>
-							China Eastern Airlines - 2036 <br/>
-							Aircraft: 73H <br/>
+							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
 						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p>
-							Dhaka (DAC)14:35
-							Thursday, 17 May 18
-						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> Singapore (SIN)14:25
-							Friday, 18 May 18</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> 21hrs 50mins Multi Stop</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
-						  <p className="w3-text-red w3-large"> BDT 139327.87</p>
-						  <p><button className="w3-button w3-ripple w3-red w3-round">Buy</button></p>
-						</div>
-					</div>
-					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
-						<div className="w3-col w3-center w3-padding" style={wd_20}>
 						  <p>
 							China Eastern Airlines - 2036 <br/>
 							Aircraft: 73H <br/>
@@ -168,6 +146,37 @@ class FlightSearch extends Component{
 					</div>
 					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
 						<div className="w3-col w3-center w3-padding" style={wd_20}>
+						  <p>
+							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
+						  </p>
+						  <p>
+							China Eastern Airlines - 2036 <br/>
+							Aircraft: 73H <br/>
+						  </p>
+						</div>
+						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+						  <p>
+							Dhaka (DAC)14:35
+							Thursday, 17 May 18
+						  </p>
+						</div>
+						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+						  <p> Singapore (SIN)14:25
+							Friday, 18 May 18</p>
+						</div>
+						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+						  <p> 21hrs 50mins Multi Stop</p>
+						</div>
+						<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
+						  <p className="w3-text-red w3-large"> BDT 139327.87</p>
+						  <p><button className="w3-button w3-ripple w3-red w3-round">Buy</button></p>
+						</div>
+					</div>
+					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
+						<div className="w3-col w3-center w3-padding" style={wd_20}>
+						  <p>
+							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
+						  </p>
 						  <p>
 							China Eastern Airlines - 2036 <br/>
 							Aircraft: 73H <br/>
@@ -217,7 +226,6 @@ class FlightSearch extends Component{
 				</div>
 			);
 		}
-		var backup=(<img className="w3-image" src="\images\img1.jpg" alt="London" />);
 		var elems=(
 			<header className="w3-content w3-display-container  w3-hide-small" style={mxWidthStyle}>
 			<img className="w3-image" src="\images\img1.jpg" alt="London" />
@@ -315,7 +323,7 @@ class FlightSearch extends Component{
 							</div>
 						</div>
 						<br/>
-						<p><button className="w3-button w3-dark-grey" type="submit">Search and find dates</button></p>
+						<p><button className="w3-button w3-dark-grey" type="submit">Search Flights</button></p>
 					</form>
 				</div>
 			  </div>
