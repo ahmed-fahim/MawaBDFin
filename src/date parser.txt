@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form>
+	<input type="date" id="dt" required/>
+	<button onclick="seeme()" type="submit" >CLICK</button>
+</form>
+<p id="dekha"></p>
+
+<script>
+function seeme(){
+	var inp=document.getElementById('dt').value;
+	if(inp==""){
+		return;
+	}
+    var mon=inp.substr(5,2);
+    var day=inp.substr(8,2);
+    var year=inp.substr(0,4);
+	document.getElementById('dekha').innerHTML=year+"/"+mon+"/"+day;
+}
+
+</script>
+
+</body>
+</html>

@@ -645,14 +645,14 @@ class App extends Component{
 					<Router>
 						<div>
 							<Redirect to={'/registration'} />
-							<Route exact path={'/registration'} render={this.registration_render.bind(this)} />
+							<Route exact path={'/registration'} render={this.reg_render.bind(this)} />
 						</div>
 					</Router>
 				);
 				break;
 			case 3:
 				return(
-				
+					<h1> NOT DONE YET </h1>
 				);
 				break;
 			default:

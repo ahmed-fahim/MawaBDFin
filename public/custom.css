@@ -11,6 +11,11 @@
 .fx-left{
 	align-content:left;
 }
+.flex-vertics{
+	display:flex;
+	flex-direction:column;
+	
+}
 .fx-right{
 	align-content:right;
 }
@@ -35,3 +40,13 @@
 .sm-margin-left{
   margin-left:1px;
 }
+.contmaxwidth{
+	max-width:1500px;
+}
+.marge016{
+	margin:0 -16px;
+}
+.wdth65{
+	width:65%;
+}
+
