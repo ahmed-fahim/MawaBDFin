@@ -11,50 +11,7 @@ import $ from 'jquery/src/jquery';
 
 import { createHashHistory } from 'history';
 export const history = createHashHistory();
-// loadDoc(){
-    // isloading=1;
-    // itemList=[];
-    // searchCounter=searchCounter+1;
-    // var query=document.getElementById('searchId').value;
-    // var trunclimit=-1;
-    // for(var i=0;i<query.length;i++){
-      // if(query[i] == ';'){
-        // trunclimit=i;
-        // break;
-      // }
-    // }
-    // if(trunclimit != -1){
-      // query=query.substring(0,trunclimit);
-    // }
-    // const FIN_URL="http://es.backpackbang.com:9200/products/amazon/_search?q=" + query;
-    // //console.log(FIN_URL);
-    // $.ajax({
-          // url: FIN_URL,
-          // type: "get", //send it through get method
-          // success: function(response) {
-              // changeInProducts=1;
-              // if(response.hits.total == 0){
-                // itemList=[];
-                // isloading=0;
-              // }
-              // else{
-                // var hitsArray=response.hits.hits;
-                // itemList=[];
-                // //console.log(hitsArray[0]._id+' '+ hitsArray[0]._source.title+' '+hitsArray[0]._source.salePrice.toString()+' '+hitsArray[0]._source.images[0]);
-                // for(var ii=0;ii<hitsArray.length;ii++){
-                  // var newItem= new Item(hitsArray[ii]._id, hitsArray[ii]._source.title, hitsArray[ii]._source.salePrice,hitsArray[ii]._source.images[0]);
-                  // itemList.push(newItem);
-                  // console.log(itemList[ii].name);
-                // }
-                // isloading=0;
-              // }
-          // }.bind(this),
-          // error: function(xhr) {
-            // isloading=0;
-            // alert("Something went wrong");
-          // }
-        // });
-  // }
+
 ////////////////INDEX.JS Only
 
 var token="";
@@ -73,22 +30,79 @@ function setToken(e){
 	jsresponse=e;
 	token=jsresponse.access_token;
 	authorized=1;
+	console.log(token);
+	console.log('here');
+	var responseString=JSON.stringify(e);
+	setCookie("access_token", token);
+	setCookie("profile_data", responseString);
 }
 
+function precheckToken(){
+	if(checkCookie("access_token") == true){
+		jsresponse=JSON.parse(getCookie("profile_data"));
+		token=getCookie("access_token");
+		var responseString=JSON.stringify(jsresponse);
+		setCookie("access_token", token);
+		setCookie("profile_data", responseString);
+		authorized=1;
+	}
+	else{
+		return;
+	}
+}
+function setCookie(cname,cvalue) {
+	var d = new Date();
+	d.setTime(d.getTime() + (4*60*60*1000));
+	var expires = "expires=" + d.toGMTString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}	
+
+function getCookie(cname) {
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
+function checkCookie(key_index) {
+	var val=getCookie(key_index);
+	if (val != "") {
+		return true;
+	} 
+	else {
+		return false;
+	}
+}
+function deleteCookie(key_index){
+	document.cookie = key_index+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
 function logOutHandler(){
 	token="";
 	authorized=0;
 	jsresponse=[];
+	deleteCookie("access_token");
+	deleteCookie("profile_data");
 }
 
 // Rendering Functions
 function renderHome(){
+	precheckToken();
 	var elems=(
 		<Home key={authorized+1} auth={authorized} jsresp={jsresponse} token={token} setToken2={setToken.bind(this)} setlogOut={logOutHandler.bind(this)}/>
 	);
 	return elems;
 }
 function renderLogin(){
+	precheckToken();
 	if(authorized == 1){
 		return renderHome();
 	}
@@ -98,6 +112,7 @@ function renderLogin(){
 	return elems;
 }
 function renderRegistration(){
+	precheckToken();
 	if(authorized == 1){
 		return renderHome();
 	}
@@ -107,6 +122,7 @@ function renderRegistration(){
 	return elems;	
 }
 function renderMyFlights(){
+	precheckToken();
 	if(authorized == 0){
 		return renderLogin();
 	}

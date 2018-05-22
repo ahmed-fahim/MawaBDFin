@@ -24,6 +24,7 @@ class FlightSearch extends Component{
 		this.validateForm=this.validateForm.bind(this);
 		this.formatDate=this.formatDate.bind(this);
 		this.handle_scroll = this.handle_scroll.bind(this);
+		this.genSug=this.genSug.bind(this);
 	}
 	handle_scroll(){
 		var elemnt=document.getElementById('resultList');
@@ -206,7 +207,12 @@ class FlightSearch extends Component{
 
 		return ret;
 	}
-
+	genSug(e){
+		console.log(e.target.value);
+		var qry=e.target.value;
+		var airports=["Dhaka", "Chittagong", "NewYork", "Melbourne"];
+		
+	}
 	render_Search(){
 		var mxWidthStyle={
 			maxWidth: 2400
@@ -245,7 +251,13 @@ class FlightSearch extends Component{
 						<div className="w3-row-padding marge016">
 							<div className="w3-half">
 							  <label>From</label>
-							  <input className="w3-input w3-border" type="text" placeholder="Departing from" id="from_" required/>
+							  <input className="w3-input w3-border" list="airports" placeholder="Departing from" autocomplete="off" id="from_" required/>
+							  <datalist id="airports">
+							  <option value="Dhaka"/>
+							  <option value="Melbourne"/>
+							  <option value="Miami"/>
+							  <option value="Denmark"/>
+							  </datalist>
 							</div>
 							<div className="w3-half">
 							  <label>To</label>

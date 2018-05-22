@@ -1,6 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+	<head>
+	<script>
+		function setCookie(cname,cvalue) {
+			var d = new Date();
+			d.setTime(d.getTime() + (4*60*60*1000));
+			var expires = "expires=" + d.toGMTString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}	
+
+		function getCookie(cname) {
+			var name = cname + "=";
+			var decodedCookie = decodeURIComponent(document.cookie);
+			var ca = decodedCookie.split(';');
+			for(var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+
+		function checkCookie(key_index) {
+			var val=getCookie(key_index);
+			if (val != "") {
+				return true;
+			} 
+			else {
+				return false;
+			}
+		}
+		function deleteCookie(key_index){
+			document.cookie = key_index+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		}
+	</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-deep-purple.css">
