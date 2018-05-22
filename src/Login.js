@@ -21,13 +21,19 @@ class Login extends Component{
 		this.formValidate=this.formValidate.bind(this);
 		this.alertGenerate=this.alertGenerate.bind(this);
 		this.crossIt=this.crossIt.bind(this);
+		this.uncrossIt=this.uncrossIt.bind(this);
 		this.processJSON=this.processJSON.bind(this);
+	}
+	uncrossIt(){
+		if(this.state.err==1){
+			document.getElementById("alertDiv").style.display="";
+		}
 	}
 	crossIt(){
 		document.getElementById("alertDiv").style.display="none";
 	}
 	alertGenerate(){
-		var ret=(<div></div>);
+		var ret=(<div id="alertDiv"></div>);
 		if(this.state.err == 1){
 			ret=(
 				<div className="w3-panel w3-red w3-display-container" id="alertDiv">
@@ -36,6 +42,7 @@ class Login extends Component{
 					<p>{this.state.err_msg}</p>
 				</div>
 			);
+			
 		}
 		return ret;
 	}
@@ -90,10 +97,12 @@ class Login extends Component{
 		this.props.setToken2(e);
 	}
 	render(){
+		console.log('render called');
 		return(
 			<div>
 				<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
+				{this.uncrossIt()}
 				<div className="w3-container w3-center">
 				  <div className="horizontal-center">
 					<div className="w3-twothird w3-card w3-padding-32">
