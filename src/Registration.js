@@ -74,11 +74,21 @@ class Registration extends Component{
 		return ret;
 	}
 	processJSON(jsobj){
-		console.log(jsobj);
+		//console.log(jsobj);
 		if(jsobj.success == 'false'){
+			var errorMSG;
+			if(jsobj.error.hasOwnProperty('email')){
+				errorMSG="Sorry, the email seems to be invalid";
+			}
+			else if(jsobj.error.hasOwnProperty('c_password')){
+				errorMSG="Both passwords must match!!";
+			}
+			else{
+				errorMSG="Sorry, Something Went Wrong";
+			}
 			this.setState({
 				err:1,
-				err_msg:"Something went wrong, Please try again",
+				err_msg:errorMSG,
 				success:0
 			});
 			return;
@@ -96,18 +106,20 @@ class Registration extends Component{
 		var base="https://www.mawabd.com/flightHotelBooking/public/";
 		var req="api/register";
 		var full_url=base+req;
+		
 		var jsObj={
-			"first_name":document.getElementById('fname_'),
-			"email":document.getElementById('email_'),
-			"password":document.getElementById('pw_'),
-			"c_password":document.getElementById('pw2_'),
-			"identification":document.getElementById('idVal_'),
-			"identification_type":document.getElementById('idType_'),
-			"last_name":document.getElementById('lname_'),
-			"title":document.getElementById('title_'),
-			"phone":document.getElementById('mobile_'),
-			"gender":document.getElementById('gender_'),
+			"first_name":			document.getElementById('fname_').value,
+			"email":				document.getElementById('email_').value,
+			"password":				document.getElementById('pw_').value,
+			"c_password":			document.getElementById('pw2_').value,
+			"identification":		document.getElementById('idVal_').value,
+			"identification_type":	document.getElementById('idType_').value,
+			"last_name":			document.getElementById('lname_').value,
+			"title":				document.getElementById('title_').value,
+			"phone":				document.getElementById('mobile_').value,
+			"gender":				document.getElementById('gender_').value
 		};
+		console.log(jsObj);
 		var flag=1;
 		$.ajax({
 			url: full_url,
@@ -117,19 +129,17 @@ class Registration extends Component{
 			dataType:'json',
 			crossDomain:'true',
 			success: function(result, status, XHR){
-				console.log(result);
+				//console.log(result);
 				this.processJSON(result);
 			}.bind(this),
 			error: function(xhr){
-				console.log("error");
-				console.log(xhr);
 				this.setState({
-					success:1,
-					err:0,
-					err_msg:""
+					success:0,
+					err:1,
+					err_msg:"Sorry, Something Went Wrong"
 				});
 				flag=0;
-			}
+			}.bind(this)
 		});
 					
 		if(flag==0){

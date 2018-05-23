@@ -2,6 +2,7 @@
   "name": "mawabd",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://www.mawabd.com/flightHotelBooking/public/",
   "dependencies": {
     "jquery": "^3.3.1",
     "react": "^16.3.2",

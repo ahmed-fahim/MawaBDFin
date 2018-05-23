@@ -86,6 +86,26 @@ function deleteCookie(key_index){
 	document.cookie = key_index+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 function logOutHandler(){
+	var base="https://www.mawabd.com/flightHotelBooking/public/";
+	var req="api/logout";
+	var full_url=base+req;
+	$.ajax({
+			url: full_url,
+			type: 'POST',
+			accepts: 'application/json',
+			dataType:'json',
+			crossDomain:'true',
+			headers:{
+				"Accept" : 'application/json',
+				"Authorization" : 'Bearer '+token
+			},
+			success: function(result, status, XHR){
+				//console.log(result);
+			}.bind(this),
+			error: function(xhr){
+				//console.log("error");
+			}
+	});
 	token="";
 	authorized=0;
 	jsresponse=[];
