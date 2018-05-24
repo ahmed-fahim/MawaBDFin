@@ -23,16 +23,16 @@ class Topbar extends Component{
 		if(this.state.auth==0){
 			rightSide=(
 				<div className="w3-right w3-hide-small w3-margin-top">
-					<Link className="w3-button w3-ripple w3-bar-item barFont" to={'/login'} >{'Sign In'} </Link> 
-					<Link className="w3-button w3-ripple w3-bar-item barFont w3-margin-right" to={'/registration'} >{'Sign Up'} </Link> 
+					<Link className="w3-button w3-ripple w3-bar-item barFont w3-xlarge" to={'/login'} >{'Sign In'} </Link> 
+					<Link className="w3-button w3-ripple w3-bar-item barFont w3-margin-right w3-xlarge" to={'/registration'} >{'Sign Up'} </Link> 
 				</div>
 			);
 		}
 		else if(this.state.auth==1){
 			rightSide=(
 				<div className="w3-right w3-hide-small w3-margin-top">
-					<Link className="w3-button w3-ripple w3-bar-item barFont" to={'/myflights'} >{'My Flights'} </Link> 
-					<Link className="w3-button w3-ripple w3-bar-item barFont w3-margin-right" to={'/logout'} >{'Sign Out'} </Link> 
+					<Link className="w3-button w3-ripple w3-bar-item barFont w3-xlarge" to={'/myflights'} >{'My Flights'} </Link> 
+					<Link className="w3-button w3-ripple w3-bar-item barFont w3-margin-right w3-xlarge" to={'/logout'} >{'Sign Out'} </Link> 
 				</div>
 			);
 		}

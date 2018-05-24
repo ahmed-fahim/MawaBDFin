@@ -22,16 +22,13 @@ var flightDetails;
 var searchEntries;
 
 
-function rockOn(){
-	console.log("we rock");
-}
-
 
 // Transition Functions
 function setToken(e){
 	jsresponse=e;
 	token=jsresponse.access_token;
 	authorized=1;
+	console.log('token paisi');
 	console.log(token);
 	console.log('here');
 	var responseString=JSON.stringify(e);
@@ -121,10 +118,10 @@ function logOutHandler(){
 				"Authorization" : 'Bearer '+token
 			},
 			success: function(result, status, XHR){
-				//console.log(result);
+				console.log(result);
 			}.bind(this),
 			error: function(xhr){
-				//console.log("error");
+				console.log("error");
 			}
 	});
 	token="";
@@ -163,6 +160,7 @@ function renderRegistration(){
 	return elems;	
 }
 function renderFlightBook(){
+	precheckToken();
 	checkEntries();
 	if(flightChoice==0){
 		return renderHome();
@@ -179,10 +177,7 @@ function renderMyFlights(){
 	if(authorized == 0){
 		return renderLogin();
 	}
-	var elems=(
-		<Home key={authorized+1} auth={authorized} jsresp={jsresponse} token={token} setToken2={setToken.bind(this)} setlogOut={logOutHandler.bind(this)}/>
-	);
-	return elems;
+	return renderHome();
 }
 function renderLogout(){
 	logOutHandler();

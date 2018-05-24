@@ -67,7 +67,7 @@ class Registration extends Component{
 				<div className="w3-panel w3-red w3-display-container" id="alertDiv">
 					<span onClick={this.crossIt.bind(this)} className="w3-button w3-red w3-large w3-display-topright">&times;</span>
 					<h3>Registration Failed!</h3>
-					<p>{this.state.err_msg}</p>
+					<p className="w3-text-white w3-large">{this.state.err_msg}</p>
 				</div>
 			);
 		}
@@ -154,13 +154,13 @@ class Registration extends Component{
 				{this.uncrossIt()}
 				{this.greenAlert()}
 				{this.uncrossG()}
-				<div className="w3-container w3-center w3-black">
+				<div className="w3-container w3-center w3-indigo">
 				  <div className="horizontal-center">
-					<div className="w3-twothird w3-card w3-padding-32">
+					<div className="w3-twothird w3-padding-32">
 					  <h2 className="barFont">Welcome At MawaBD<br/>Fill in the following form to Sign Up</h2>
 					  <br/>
 					  <br/>
-						<form onSubmit={this.formValidate}>
+						<form onSubmit={this.formValidate} className="w3-container w3-padding-32">
 						  <div className="w3-bar w3-padding-left w3-padding-right">
 							<div className="w3-bar-item">
 							  <label className="w3-left barFont">Gender</label> <br/>
