@@ -1,0 +1,783 @@
+REST API by features
+
+
+Type Constants:
+status (Booking)
+pending, cancelled, confirmed, web-check-in
+age_class(Booking)
+adult, child, infant
+trip_type(Booking)
+one-way, round-trip
+
+
+
+
+
+
+
+
+
+NOTE: All authenticated resources (only accessible if logged in) must be requested with the following headers:
+      Accept: application/json
+      Authorization: Bearer {access-token}
+Example:
+Accept:application/json
+Authorization:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIwYzg2NDU2NjdhODkzMWY5NjAyOWU5ZDQ5MDg3MGIyYTc4M2QxNDg4ZDYyNTg5NDFiNDhhNTU2ZWVlMjliMDNmZjYyMjk2YmFjYzk0NTdlIn0.eyJhdWQiOiIxIiwianRpIjoiMjBjODY0NTY2N2E4OTMxZjk2MDI5ZTlkNDkwODcwYjJhNzgzZDE0ODhkNjI1ODk0MWI0OGE1NTZlZWUyOWIwM2ZmNjIyOTZiYWNjOTQ1N2UiLCJpYXQiOjE1MjY4OTYzMzEsIm5iZiI6MTUyNjg5NjMzMSwiZXhwIjoxNTU4NDMyMzMxLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.X7APfbppXo9gEnNFEKJGf8qNmCsX1aoXm5gtmQBmrSE8OZkKiuqY6gGjaA1jHLbfmGuQR44t4legUOn0JOB36pFkcvtJPwr9mtg6wR8fJ2kJZneJc_6SN5qIQkoOmWm53BX5jbWnMklEeFRV0DXTCtnFcqYPkh9zLSViRR_EYxDQOUgCIyuGM1kFHzdJeQ-R3q6zs2nAXmbU2fpFu56RaphQF0UacCTrtbm6ocXg_zlkSmcu7S9zjR9qKMZxtcJi6JciUzgAcrhV1FOFiwpYcITBtd4Qr8qXrioEwixxf9zPCE0JXd_xBDjU7odQeCQF-G4bGjYy8IFUjfRFMw-G0DKHhkgTi0ic-2cYHvEMYHEUBXbGn9kJd8mz8ry81KcbXDhH3FIqkBT7xmq63QUMEbUaofJ8PApYashnn49ZPwNWA9ilq0lgH5ZoH1ubmxpzx9QE9PiEbbzXwDxDjCLnl5cQ01uv4spP210gZUpwjAOGw_Rq0ioYE53Rx-3kkigHeYgPnmOtb5eR1sz3DABpz8HugoICELQzRw7ZrkIUQsB2689TfCWBcRBoHZpdIHcfby-LAx10g31tbYz5bE705ELyEMO72Hd6x31Dpeic4ij_vDkltkbdhyAz6hItgZYU223n15mzx0KCJHsOt0XvRylwEuzAfhwnEMKKdy1EfnA
+
+
+
+Customer/Admin Login: 
+Request:  	POST /api/login
+		POST /api/admin/login
+password:12345
+email:smfaisal1648@gmail.com
+Response:
+	{
+    "success": "true",
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjZhZjY5MjkwZWExOWUxZjliOGUyNmM0YzJjOTA5Mzg1MDFlZjNmM2Y5NjFhNjdhYTY2M2JkZTU1MWYyOGU5MWM2ZjI4YzgzMGQ3NDFjMzhmIn0.eyJhdWQiOiIxIiwianRpIjoiNmFmNjkyOTBlYTE5ZTFmOWI4ZTI2YzRjMmM5MDkzODUwMWVmM2YzZjk2MWE2N2FhNjYzYmRlNTUxZjI4ZTkxYzZmMjhjODMwZDc0MWMzOGYiLCJpYXQiOjE1MjY3MDg1NDgsIm5iZiI6MTUyNjcwODU0OCwiZXhwIjoxNTU4MjQ0NTQ4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.le5YZseODJYGWOKbTEPP5OX4JAt2eu05zBet6WMs9-uGIjblTTxjOQ0IMIcQ-JUI0-bqTepobABx2Jb88dw1TPIngsjV1nPuS4kJD8FMBAaQIdx6kxGLzyfzIJksJpHSiPvCc566D_V1PfxPbj2qaBrWAT8kWmZEqXKbteaybo-zdpTD8ISsjUOwtqrrJKHs3nMcDc50bc6TOorgn8f-xCLWH-rTFlflnCUJtJMs4JFYF9xic7M6zweyCsvUxraa6kb19DPX-1r3pM7uXwbWU-kFxRur0hpVGLEvOvkIXGY2rYn0A7H97-5DgZTFDEKz6gNu18JypSCMhcSI4Pe-ZdMzqiN4jc5X_sLe_w89Pm3fD-Y0TH6kC6Lw2Bw2nOmtbviRdx9nrIZXxiFgVqK3ilAUXSSPoSWTJ6Y1OHX82hXBhbar1Vu3WDsHsT6lZVTGeqYGzzr-qndzUzD8rFECRv8zTaU63sGJM-jmD6QDFvFUkmGdsHpjErHriKDRSm7qMFoqUaqa4fi0QZoz_MCsVcj1-EUfzYYiciOUdusYssYZg0eyDuR6HKvka0qTPdBA2P2Pj1u8ZkFeGD8KNUrwayiUBc2O2XlhsF2jbFrvOWclLnT91gP0VsQzyJh4rMDAmT3b55OHBsLQKqbhZijV96DPOudGWtWBxLZnRfTKQAI",
+    "user": {
+        "id": 1,
+        "title": "Mr",
+        "first_name": "Faisal",
+        "last_name": "Rahman",
+        "email": "smfaisal1648@gmail.com",
+        "phone": "123456",
+        "identification_type": "nid",
+        "identification": "123456789",
+        "gender": "male",
+        "verification": "verified",
+        "created_at": "2018-05-19 05:39:14",
+        "updated_at": "2018-05-19 05:41:40"
+    }
+}
+Or,
+
+{
+"success": false,
+ 	'error’: 'unverified' (/ 'unauthorised')
+}
+
+Customer/Admin Logout:
+Request: 	POST /api/logout
+		POST /api/admin/logout
+Accept:application/json
+Authorization:Bearer {access_token}
+Response:
+	{
+    "success": true /false
+}
+
+Customer/Admin Registration: 
+Request: 	POST /api/register
+		POST /api/admin/register
+first_name:Faisal
+email:smfaisal1648@gmail.com
+password:12345
+c_password:12345
+identification:123456789
+identification_type:nid
+last_name:Rahman
+title:Mr
+phone:123456
+gender:male
+Response:
+	{
+    "success": “true”
+}
+Email Verification: [server side; Not needed in frontend]
+Request:  GET /verify/{token}
+Response:
+	{
+    "success": “true”
+}
+Or,
+{
+	“Success”: “false”
+	“Message”: “database entry failed, possibly such an entry already exists”
+}
+
+Profile: 
+Request: 	POST /api/profile
+		POST /api/admin/profile
+first_name:Faisal
+email:avash09@gmail.com
+password:qq
+c_password:qq
+identification:1
+identification_type:nid
+last_name:Rahman
+title:Mr
+phone:1
+gender:male
+passport_number:456
+passport_expiry:2019/12/8
+passport_country:BD
+nationality:bd
+alternate_phone:789
+city:chittagong
+country:India
+s
+Response:
+//Customer
+	{  
+    "success": "true",
+    "user": {
+        "id": 2,
+        "title": "Mr",
+        "first_name": "Faisal",
+        "last_name": "Rahman",
+        "email": "smfaisal1648@gmail.com",
+        "phone": "123456",
+        "identification_type": "nid",
+        "identification": "123456789",
+        "gender": "male",
+        "verification": "verified",
+        "created_at": "2018-05-15 12:19:42",
+        "updated_at": "2018-05-15 12:22:24"
+    },
+    "customer": {
+        "id": 1,
+        "user_id": 2,
+        "passport_number": null,
+        "passport_expiry": null,
+        "passport_country": null,
+        "nationality": null,
+        "alternate_phone": null,
+        "street_address": null,
+        "city": null,
+        "counntry": null,
+        "date_of_birth": null,
+        "credit_allowance": null,
+        "credit_currency": null,
+        "created_at": "2018-05-15 12:22:24",
+        "updated_at": "2018-05-15 12:22:24"
+    }
+}
+
+Or,
+//Admin
+{  
+    "success": "true",
+    "user": {
+        "id": 2,
+        "title": "Mr",
+        "first_name": "Faisal",
+        "last_name": "Rahman",
+        "email": "smfaisal1648@gmail.com",
+        "phone": "123456",
+        "identification_type": "nid",
+        "identification": "123456789",
+        "gender": "male",
+        "verification": "verified",
+        "created_at": "2018-05-15 12:19:42",
+        "updated_at": "2018-05-15 12:22:24"
+    }
+}
+
+Or,
+{
+"success": ‘false’,
+'error':'fetching customer profile failed'
+}
+
+Update Profile:
+Request: POST 
+Forgot Password (request to reset):
+Request: 	POST /api/reset
+		POST api/admin/reset
+email:smfaisal1648@gmail.com
+Response:
+	{
+    "success": "true",
+    "message": "A reset link was sent to you. If you do not receive an email soon, please contact customer support."
+}
+
+Or,
+{
+    "success": "false",
+    "message": 'Could not generate reset link. Please try again later'
+}
+
+Or,
+{
+    "success": "false",
+    "message": 'Incorrect email'
+}
+
+
+Password Reset Page (after clicking mail from mail): [frontend should route to reset password page and extract the token from the URL]
+Request: GET /reset/{token}
+Response: Redirect to /index.html/change_password?token={token}
+
+
+Reset password:
+Request: 	POST /api/change/password
+		POST /api/admin/change/password
+Response:
+	{
+    "success": "true"
+}
+Or,
+{
+    "success": "false",
+    "message": "something went wrong. token may have already been used. try to login or please try again"
+}
+
+Update Profile: 	
+Request:	POST /api/profile/update
+		POST /api/admin/profile/update
+first_name:Faisal
+email:ptt13@gmail.com
+password:qq
+c_password:qq
+identification:1
+identification_type:nid
+last_name:Rahman
+title:Mr
+phone:1
+gender:male
+Passport_number:456 [optional]
+passport_expiry:2019/12/8 [optional, Date format must be Y/M/D]
+passport_country:BD [optional]
+nationality:bd [optional]
+alternate_phone:789 [optional]
+street_address: house:51, road:3 [optional]
+city:chittagong [optional]
+country:India [optional]
+date_of_birth: 1995/12/17 [optional, Date format must be Y/M/D]
+
+
+Response:
+	{
+    "success": "true"
+} 
+Or,
+{
+    "success": "true",
+    “error”: “database update failed” 	
+}
+
+
+Input Airport:
+Request: POST /api/admin/input/airport
+name:Hazrat Shahparan International Airport
+city:Chittagong
+country:BANGLADESH
+city_code:CTG
+Response:
+	{
+    "success": "true"
+}
+
+Update Airport:
+Request: POST /api/admin/update/airport
+name:Hazrat Shahjalal International Airport Dhaka Bangladesh
+city:Dacca
+country:BANGLADESH
+city_code:DAC
+id:1
+Response:
+	{
+    "success": "true"
+} 
+Or,
+	{
+    "success": "false",
+    "message": "invalid airport id"
+}
+
+Search Airports by Name/City/Country: [AJAX]
+Request: 	POST /api/search/airport
+   	POST /api/admin/search/airport
+search:bangladesh
+Response:
+[
+    {
+        "id": 1,
+        "name": "hazrat shahjalal international airport",
+        "city": "dhaka",
+        "country": "bangladesh",
+        "city_code": "dac",
+        "created_at": "2018-05-16 11:27:03",
+        "updated_at": "2018-05-16 11:27:03"
+    },
+    {
+        "id": 2,
+        "name": "hazrat shahparan international airport",
+        "city": "chittagong",
+        "country": "bangladesh",
+        "city_code": "ctg",
+        "created_at": "2018-05-16 11:28:16",
+        "updated_at": "2018-05-16 11:28:16"
+    }
+]
+
+Or,
+
+[]             //empty if nothing found
+
+Input airline:
+Request:	POST /api/admin/input/airline
+name:BIMAN Bangladesh Airlines
+country:BANGLADESH
+Logo:[file-image, optional]
+Id:1
+
+
+Response:
+	{
+    "success": "true"
+}
+Or,
+{
+    "success": "false",
+    “message”: “database entry failed, possibly such an entry already exists”
+}
+
+Update airline:
+Request:	POST /api/admin/update/airline
+name:BIMAN Bangladesh Airlines
+country:BANGLADESH
+Logo:[file, optional]
+id:18
+Response:
+	{
+    "success": "true"
+}
+Or,
+{
+    "success": "false",
+    “message”: “invalid airline id”
+}
+
+
+Search Airline:
+Request:	POST /api/admin/search/airline
+search:Biman
+Response:
+	[
+    {
+        "id": 18,
+        "name": "biman bangladesh airlines",
+        "logo": "airline-logos\/lqlwXbyEhG4jLtNguNwZDKSLDeQKBkv2rAgsgk5D.jpeg",
+        "country": "bangladesh",
+        "created_at": "2018-05-20 03:51:30",
+        "updated_at": "2018-05-20 03:55:26"
+    },
+    {
+        "id": 19,
+        "name": "biman bangladesh airlines",
+        "logo": "airline-logos\/YLKI8dyKRXq25wdPQtCOQ8Pd0uXVwLoFmzMXu8MX.jpeg",
+        "country": "bangladesh",
+        "created_at": "2018-05-20 03:51:49",
+        "updated_at": "2018-05-20 03:51:49"
+    }
+]
+Or,
+[]
+
+Flight Input Request:
+Request: POST /api/admin/input/flight
+airline_id:1
+flight_code:Chittagong
+operated_by:BANGLADESH
+baggage_limit:CTG
+info:
+status:on-time
+number_of_stops:0
+aircraft:BOEING-747
+departure_time:2018-6-3 12:17:00
+arrival_time:2018-6-3 16:17:00
+from:1
+to:2
+stop_cities:""
+fares:
+	[
+{
+"class": "economy",
+"age_class": "adult",
+"currency": "taka",
+"amount": "12000",
+"tax_and_fee": "3000"
+},
+{
+"class": "economy",
+"age_class": "infant",
+"currency": "taka",
+"amount": "3000",
+"tax_and_fee": "3000"
+}
+]
+
+Response:
+	{
+"success":"true"
+}
+Or,
+{
+	“success”:”false”,
+	“message”: 'database entry failed, please contact database admin'
+}
+
+Flight Update:
+Request: POST /api/admin/update/flight
+Id:2  [CRITICAL FOR UPDATE]
+airline_id:1
+flight_code:Chittagong
+operated_by:BANGLADESH
+baggage_limit:CTG
+info:
+status:on-time
+number_of_stops:0
+aircraft:BOEING-747
+departure_time:2018-6-3 12:17:00
+arrival_time:2018-6-3 16:17:00
+from:1
+to:2
+stop_cities:""
+fares:
+	[
+{
+	“Id”:1, [CRITICAL FOR UPDATE]
+"class": "economy",
+"age_class": "adult",
+"currency": "taka",
+"amount": "12000",
+"tax_and_fee": "3000"
+},
+{
+	“id”: 2, [CRITICAL FOR UPDATE]
+"class": "economy",
+"age_class": "infant",
+"currency": "taka",
+"amount": "3000",
+"tax_and_fee": "3000"
+}
+]
+Response:
+{
+"success":"true"
+}
+Or,
+{
+	“success”:”false”,
+	“message”: 'database entry failed, please contact database admin'
+}
+
+Flight search:
+Request: 	POST /api/admin/search/flight
+			POST /api/search/flight
+departure_date:2018-6-3
+return_date:2018-6-4 
+from:1
+to:2
+trip_type:round-trip  [or, one-way]
+adult:2
+child:0
+infant:1
+class:economy
+Response:
+	For round-trip,
+	{
+    "success": "true",
+    "round_trip_flight": [
+        {
+            "departing_flight": {
+                "id": 2,
+                "airline_id": 1,
+                "flight_code": "BG-313",
+                "operated_by": "BIMAN",
+                "baggage_limit": "0",
+                "info": "this worked",
+                "status": "on-time",
+                "number_of_stops": 0,
+                "aircraft": "BOEING-747",
+                "departure_time": "2018-06-03 12:17:00",
+                "arrival_time": "2018-06-03 16:17:00",
+                "from": 1,
+                "to": 2,
+                "stop_cities": "\"\"",
+                "created_at": "2018-05-20 07:59:58",
+                "updated_at": "2018-05-20 08:28:30"
+            },
+            "returning_flight": {
+                "id": 4,
+                "airline_id": 1,
+                "flight_code": "Chittagong",
+                "operated_by": "BANGLADESH",
+                "baggage_limit": "CTG",
+                "info": null,
+                "status": "on-time",
+                "number_of_stops": 0,
+                "aircraft": "BOEING-747",
+                "departure_time": "2018-06-04 12:17:00",
+                "arrival_time": "2018-06-04 16:17:00",
+                "from": 2,
+                "to": 1,
+                "stop_cities": "\"\"",
+                "created_at": "2018-05-20 15:00:38",
+                "updated_at": "2018-05-20 15:00:38"
+            },
+            "total_fare": 58500.5
+        }
+    ]
+}
+
+Or For one-way,
+{
+    "success": "true",
+    "departing_flight": [
+        {
+            "id": 2,
+            "airline_id": 1,
+            "flight_code": "BG-313",
+            "operated_by": "BIMAN",
+            "baggage_limit": "0",
+            "info": "this worked",
+            "status": "on-time",
+            "number_of_stops": 0,
+            "aircraft": "BOEING-747",
+            "departure_time": "2018-06-03 12:17:00",
+            "arrival_time": "2018-06-03 16:17:00",
+            "from": 1,
+            "to": 2,
+            "stop_cities": "\"\"",
+            "created_at": "2018-05-20 07:59:58",
+            "updated_at": "2018-05-20 08:28:30",
+            "total_fare": 22500.5
+        }
+    ]
+}
+
+Booking Input:
+Request: /api/input/booking
+trip_type:round-trip
+departing_flight_id:1
+return_flight_id:2
+departure_date:2018-12-5
+return_date:2018-12-7
+adult:1
+child:0
+infant:0
+class:economy
+Guests:
+	[
+{
+"title":"Mr",
+"first_name":"Faisal",
+"last_name":"Rahman",
+"gender":"male",
+"passport_number":"BA123",
+"passport_expiry":"2019-4-1",
+"passport_country":"bd",
+"nationality":"bd",
+"meal_preference":"none",
+"age_class":"adult",
+"street_address":"bla la",
+"city":"dhaka",
+"country":"bd",
+"phone":"1234156",
+"date_of_birth":"1995-12-17"
+}
+]
+
+from:1
+to:3
+Response:
+	{
+"success":"true"
+}
+Or,
+{
+	“success”:”false”,
+	“message”: 'database entry failed, please contact database admin'
+}
+
+
+Booking list all:
+Request: POST /api/admin/list/booking
+Response:
+	{
+    "success": "true",
+    "result": [
+        {
+            "id": 6,
+            "admin_id": null,
+            "customer_id": 1,
+            "status": "pending",
+            "adjusted_amount": "15000",
+            "confirmation_code": "1",
+            "trip_type": "one-way",
+            "from": 1,
+            "to": 2,
+            "departure_date": "2018-12-05",
+            "return_date": "2018-12-07",
+            "departing_flight_id": 1,
+            "return_flight_id": 2,
+            "created_at": "2018-05-21 10:22:39",
+            "updated_at": "2018-05-21 10:22:39",
+            "guests": [
+                {
+                    "id": 5,
+                    "booking_id": 6,
+                    "boarding_pass": "unavailable",
+                    "title": "Mr",
+                    "first_name": "Faisal",
+                    "last_name": "Rahman",
+                    "gender": "male",
+                    "passport_number": "BA123",
+                    "passport_expiry": "2019-04-01",
+                    "passport_country": "bd",
+                    "nationality": "bd",
+                    "meal_preference": "none",
+                    "age_class": "adult",
+                    "street_address": "bla la",
+                    "city": "dhaka",
+                    "country": "bd",
+                    "phone": "1234156",
+                    "date_of_birth": "1995-12-17",
+                    "created_at": "2018-05-21 10:22:39",
+                    "updated_at": "2018-05-21 10:22:39"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "admin_id": null,
+            "customer_id": 1,
+            "status": "pending",
+            "adjusted_amount": "15000",
+            "confirmation_code": "1",
+            "trip_type": "one-way",
+            "from": 1,
+            "to": 3,
+            "departure_date": "2018-12-05",
+            "return_date": "2018-12-07",
+            "departing_flight_id": 1,
+            "return_flight_id": 2,
+            "created_at": "2018-05-21 10:21:43",
+            "updated_at": "2018-05-21 10:21:43",
+            "guests": [
+                {
+                    "id": 4,
+                    "booking_id": 5,
+                    "boarding_pass": "unavailable",
+                    "title": "Mr",
+                    "first_name": "Faisal",
+                    "last_name": "Rahman",
+                    "gender": "male",
+                    "passport_number": "BA123",
+                    "passport_expiry": "2019-04-01",
+                    "passport_country": "bd",
+                    "nationality": "bd",
+                    "meal_preference": "none",
+                    "age_class": "adult",
+                    "street_address": "bla la",
+                    "city": "dhaka",
+                    "country": "bd",
+                    "phone": "1234156",
+                    "date_of_birth": "1995-12-17",
+                    "created_at": "2018-05-21 10:21:43",
+                    "updated_at": "2018-05-21 10:21:43"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "admin_id": null,
+            "customer_id": 1,
+            "status": "pending",
+            "adjusted_amount": "15000",
+            "confirmation_code": null,
+            "trip_type": "one-way",
+            "from": 1,
+            "to": 3,
+            "departure_date": "2018-12-05",
+            "return_date": "2018-12-07",
+            "departing_flight_id": 1,
+            "return_flight_id": 2,
+            "created_at": "2018-05-21 10:09:29",
+            "updated_at": "2018-05-21 10:09:29",
+            "guests": [
+                {
+                    "id": 3,
+                    "booking_id": 4,
+                    "boarding_pass": "unavailable",
+                    "title": "Mr",
+                    "first_name": "Faisal",
+                    "last_name": "Rahman",
+                    "gender": "male",
+                    "passport_number": "BA123",
+                    "passport_expiry": "2019-04-01",
+                    "passport_country": "bd",
+                    "nationality": "bd",
+                    "meal_preference": "none",
+                    "age_class": "adult",
+                    "street_address": "bla la",
+                    "city": "dhaka",
+                    "country": "bd",
+                    "phone": "1234156",
+                    "date_of_birth": "1995-12-17",
+                    "created_at": "2018-05-21 10:09:29",
+                    "updated_at": "2018-05-21 10:09:29"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "admin_id": null,
+            "customer_id": 1,
+            "status": "pending",
+            "adjusted_amount": "30000",
+            "confirmation_code": "1",
+            "trip_type": "round-trip",
+            "from": 1,
+            "to": 3,
+            "departure_date": "2018-12-05",
+            "return_date": "2018-12-07",
+            "departing_flight_id": 1,
+            "return_flight_id": 2,
+            "created_at": "2018-05-21 10:30:04",
+            "updated_at": "2018-05-21 10:30:04",
+            "guests": [
+                {
+                    "id": 6,
+                    "booking_id": 7,
+                    "boarding_pass": "unavailable",
+                    "title": "Mr",
+                    "first_name": "Faisal",
+                    "last_name": "Rahman",
+                    "gender": "male",
+                    "passport_number": "BA123",
+                    "passport_expiry": "2019-04-01",
+                    "passport_country": "bd",
+                    "nationality": "bd",
+                    "meal_preference": "none",
+                    "age_class": "adult",
+                    "street_address": "bla la",
+                    "city": "dhaka",
+                    "country": "bd",
+                    "phone": "1234156",
+                    "date_of_birth": "1995-12-17",
+                    "created_at": "2018-05-21 10:30:04",
+                    "updated_at": "2018-05-21 10:30:04"
+                }
+            ]
+        }
+    ]
+}
+
+Or,
+{
+	“success”:”false”,
+	“message”: 'database entry failed, please contact database admin'
+}
+Booking find by user:
+Request: POST /api/search/booking/by/user
+Response:
+	
+asdasd
+
+
+
+	

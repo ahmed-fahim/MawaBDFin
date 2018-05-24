@@ -19,7 +19,12 @@ class Home extends Component{
 			jsresp:this.props.jsresp
 		};
 		this.setToken=this.setToken.bind(this);
+		this.setEntries= this.setEntries.bind(this);
 	}
+	setEntries(flight_, search_){
+		this.props.setEntry(flight_,search_);
+	}
+
 	setToken(e){
 		this.props.setToken2(e);
 	}
@@ -28,7 +33,7 @@ class Home extends Component{
 			return(
 				<div>
 					<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
-					<FlightSearch key ={1} auth={0} token="" jsresp={this.state.jsresp}/>
+					<FlightSearch key ={1} auth={0} token="" jsresp={this.state.jsresp} setEntry={this.setEntries.bind(this)}/>
 				</div>
 			);
 		}
@@ -36,7 +41,7 @@ class Home extends Component{
 			return(
 				<div>
 					<Topbar key={2} auth={1} setToken2={this.setToken.bind(this)}/>
-					<FlightSearch key={2} auth={1} token={this.state.token} jsresp={this.state.jsresp} />
+					<FlightSearch key={2} auth={1} token={this.state.token} jsresp={this.state.jsresp} setEntry={this.setEntries.bind(this)}/>
 				</div>
 			);
 		}

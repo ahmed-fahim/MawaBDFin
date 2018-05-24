@@ -5,7 +5,7 @@ import './index.css';
 import Home from './Home';
 import Login from './Login';
 import Registration from './Registration';
-
+import Bookflight from './Bookflight';
 import registerServiceWorker from './registerServiceWorker';
 import $ from 'jquery/src/jquery';
 
@@ -17,7 +17,9 @@ export const history = createHashHistory();
 var token="";
 var jsresponse=[];
 var authorized=0;
-
+var flightChoice=0;
+var flightDetails;
+var searchEntries;
 
 
 function rockOn(){
@@ -35,6 +37,25 @@ function setToken(e){
 	var responseString=JSON.stringify(e);
 	setCookie("access_token", token);
 	setCookie("profile_data", responseString);
+}
+
+function setEntries(flight_, search_){
+	flightDetails=flight_;
+	searchEntries=search_;
+	flightChoice=1;
+	setCookie('flight_', JSON.stringify(flightDetails));
+	setCookie('search_', JSON.stringify(search_));
+	console.log('Received Choice');
+}
+
+function checkEntries(){
+	if(checkCookie("flight_") == true){
+		flightDetails = JSON.parse(getCookie("flight_"));
+		searchEntries = JSON.parse(getCookie("search_"));
+		flightChoice=1;
+		setCookie('flight_', JSON.stringify(flightDetails));
+		setCookie('search_', JSON.stringify(searchEntries));
+	}
 }
 
 function precheckToken(){
@@ -117,7 +138,7 @@ function logOutHandler(){
 function renderHome(){
 	precheckToken();
 	var elems=(
-		<Home key={authorized+1} auth={authorized} jsresp={jsresponse} token={token} setToken2={setToken.bind(this)} setlogOut={logOutHandler.bind(this)}/>
+		<Home key={authorized+1} auth={authorized} jsresp={jsresponse} token={token} setToken2={setToken.bind(this)} setlogOut={logOutHandler.bind(this)} setEntry={setEntries.bind(this)}/>
 	);
 	return elems;
 }
@@ -141,6 +162,18 @@ function renderRegistration(){
 	);
 	return elems;	
 }
+function renderFlightBook(){
+	checkEntries();
+	if(flightChoice==0){
+		return renderHome();
+	}
+	else{
+		return(
+		<Bookflight key={131} auth={authorized} token={token} setlogOut={logOutHandler.bind(this)} search_={searchEntries} flight_={flightDetails} setToken2={setToken.bind(this)}/>
+		);
+	}
+	
+}
 function renderMyFlights(){
 	precheckToken();
 	if(authorized == 0){
@@ -161,11 +194,12 @@ function renderLogout(){
 ReactDOM.render(
 	<Router>
 		<Switch>
-			<Route exact path={'/'} render={renderHome.bind(this)}/>
-			<Route exact path={'/login'} render={renderLogin.bind(this)} />
+			<Route exact path={'/'} 			render={renderHome.bind(this)} />
+			<Route exact path={'/login'} 		render={renderLogin.bind(this)} />
 			<Route exact path={'/registration'} render={renderRegistration.bind(this)} />
-			<Route exact path={'/myflights'} render={renderMyFlights.bind(this)} />
-			<Route exact path={'/logout'} render={renderLogout.bind(this)} />
+			<Route exact path={'/myflights'} 	render={renderMyFlights.bind(this)} />
+			<Route exact path={'/logout'} 		render={renderLogout.bind(this)} />
+			<Route exact path={'/bookflight'} 	render={renderFlightBook.bind(this)} />
 		</Switch>
 	</Router>
 	, document.getElementById('root'));

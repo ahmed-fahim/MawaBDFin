@@ -13,7 +13,14 @@ class FlightSearch extends Component{
 			auth: this.props.auth,
 			token: this.props.token,
 			one_way:0,
-			params:0
+			params:0,
+			flights:[],
+			depart_list:[],
+			arrive_list:[],
+			depart_list_load:0,
+			arrive_list_load:0,
+			lastSearch:"",
+			chosenFlight:0
 		}
 		this.setParams=this.setParams.bind(this);
 		this.setBook = this.setBook.bind(this);
@@ -23,13 +30,38 @@ class FlightSearch extends Component{
 		this.render_Search=this.render_Search.bind(this);
 		this.validateForm=this.validateForm.bind(this);
 		this.formatDate=this.formatDate.bind(this);
+		this.formatDate2=this.formatDate2.bind(this);
 		this.handle_scroll = this.handle_scroll.bind(this);
 		this.genSug=this.genSug.bind(this);
+		this.departing_airports=this.departing_airports.bind(this);
+		this.arriving_airports=this.arriving_airports.bind(this);
+		this.setEntries= this.setEntries.bind(this);
+		this.getCity=this.getCity.bind(this);
+	}
+	getCity(inp){
+		var retStr="";
+		var indx=0;
+		while(true){
+			if((inp[indx] >='a' && inp[indx]<='z') || (inp[indx] >='A' && inp[indx]<='Z')){
+				break;
+			}
+			else{
+				indx++;
+			}
+		}
+		while(true){
+			if(inp[indx]==' '){break;}
+			retStr=retStr+inp[indx++];
+		}
+		return retStr;
+	}
+	setEntries(flight_, search_){
+		this.props.setEntry(flight_,search_);
 	}
 	handle_scroll(){
 		var elemnt=document.getElementById('resultList');
 		if(elemnt===undefined){
-			console.log('undefined vai');
+			console.log('undefined');
 		}
 		elemnt.scrollIntoView();
 		return;
@@ -46,6 +78,9 @@ class FlightSearch extends Component{
 		var ret=year+'/'+mon+'/'+day;
 		return ret;
 	}
+	formatDate2(inp){
+		
+	}
 	validateForm(e){
 		e.preventDefault();
 		var departDate=this.formatDate(document.getElementById('depart_').value);
@@ -61,9 +96,25 @@ class FlightSearch extends Component{
 			tripType="one-way";
 		}
 		
+		var strval=document.getElementById('from_').value;
+		var indx=0;
+		while(strval[indx] >= '0' && strval[indx] <= '9'){
+			indx++;
+		}
+		var fromInt=0;
+		if(indx > 0){fromInt=parseInt(strval.substr(0,indx));}
+		
+		strval=document.getElementById('to_').value;
+		indx=0;
+		while(strval[indx] >= '0' && strval[indx] <= '9'){
+			indx++;
+		}
+		var toInt=0;
+		if(indx > 0){toInt=parseInt(strval.substr(0,indx));}
+		
 		var jsObj={
-			"from": document.getElementById('from_').value,
-			"to": document.getElementById('to_').value,
+			"from": fromInt,
+			"to": toInt,
 			"trip_type":tripType,
 			"departure_date":departDate,
 			"return_date":returnDate,
@@ -72,11 +123,62 @@ class FlightSearch extends Component{
 			"infant":document.getElementById('infant_').value,
 			"class":document.getElementById('class_').value
 		};
-		console.log(jsObj.child+' child wants to go from '+jsObj.from);
-		this.setParams(jsObj);
+		var searchInfo={
+			"from_place": document.getElementById('from_').value,
+			"to_place":document.getElementById('to_').value,
+			"from": fromInt,
+			"to": toInt,
+			"trip_type":tripType,
+			"departure_date":departDate,
+			"return_date":returnDate,
+			"adult":document.getElementById('adult_').value,
+			"child":document.getElementById('child_').value,
+			"infant":document.getElementById('infant_').value,
+			"class":document.getElementById('class_').value			
+		};
+		var base="https://www.mawabd.com/flightHotelBooking/public/";
+		var req="api/search/flight";
+		var full_url=base+req;
+		$.ajax({
+			url: full_url,
+			type: 'POST',
+			accepts: 'application/json',
+			data:jsObj,
+			dataType:'json',
+			crossDomain:'true',
+			success: function(result, status, XHR){
+				console.log("success");
+				console.log(result);
+				if(searchInfo.trip_type == "round-trip"){
+					this.setState({
+						flights: result.round_trip_flight,
+						lastSearch: searchInfo,
+						params:1
+					});
+				}
+				else{
+					this.setState({
+						flights: result.departing_flight,
+						lastSearch: searchInfo,
+						params:1
+					});
+				}
+			}.bind(this),
+			error: function(xhr){
+				console.log("error");
+			}.bind(this)
+		});		
 	}
-	setBook(){
-
+	setBook(indx){
+		console.log(this.state.lastSearch);
+		console.log(this.state.flights[indx]);
+		if(this.state.auth === 0){
+			window.location=('/login');
+		}
+		else{
+			this.setEntries(this.state.flights[indx],this.state.lastSearch);
+			window.location=('/bookflight');
+		}
 	}
 	setCurrent(e){
 		this.props.setCurr(e);
@@ -90,6 +192,7 @@ class FlightSearch extends Component{
 		
 	}
 	render_SearchResult(){
+		console.log('here we go again');
 		var ret=(<div></div>);
 		var wd_20={
             width:"20%"
@@ -97,9 +200,8 @@ class FlightSearch extends Component{
 		var wd_1972={
             width:"19.72%"
 		};
-		if(this.state.params==1){
-			ret=(
-				<div className="w3-container">
+		
+		var tableHeader=(
 					<div className="w3-row ">
 						<div className="w3-col w3-center w3-red" style={wd_20}>
 						  <p> Airlines</p>
@@ -117,101 +219,225 @@ class FlightSearch extends Component{
 						  <p> Price</p>
 						</div>
 					</div>
-					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
-						<div className="w3-col w3-center w3-padding" style={wd_20}>
-						  <p>
-							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
-						  </p>
-						  <p>
-							China Eastern Airlines - 2036 <br/>
-							Aircraft: 73H <br/>
-						  </p>
+		);
+
+		var eachOpt=[];
+		if(this.state.params==1){
+			console.log(this.state.lastSearch);
+			var ln=this.state.flights.length;
+			var arr=[];
+			for(var i=0;i<ln;i++){
+				arr.push(this.state.flights[i]);
+			}
+			
+			for (var i = 0; i < ln; i++){
+				if(this.state.lastSearch.trip_type == "round-trip"){
+					eachOpt.push(
+						<div className="w3-row w3-card w3-black">
+							<div className="w3-col w3-center w3-padding" style={wd_20}>
+							  <p>
+								<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
+							  </p>
+							  <p>
+								{arr[i].departing_flight.operated_by + ' ' + arr[i].departing_flight.flight_code} <br/>
+								{'Aircraft: ' + arr[i].departing_flight.aircraft} <br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.from_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].departing_flight.departure_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.to_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].departing_flight.arrival_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p> {arr[i].departing_flight.duration.days + ' day(s) ' + arr[i].departing_flight.duration.h + ' hours'}</p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
+							  <p className="w3-text-red w3-large"> {"BDT "+ arr[i].total_fare}</p>
+							  <p><button className="w3-button w3-hover-green w3-red w3-round" onClick={this.setBook.bind(this,i)}>
+									Book
+							  </button></p>
+							</div>
 						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p>
-							Dhaka (DAC)14:35
-							Thursday, 17 May 18
-						  </p>
+					);
+					eachOpt.push(
+						<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
+							<div className="w3-col w3-center w3-padding" style={wd_20}>
+							  <p>
+								<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
+							  </p>
+							  <p>
+								{arr[i].returning_flight.operated_by + ' ' + arr[i].returning_flight.flight_code} <br/>
+								{'Aircraft: ' + arr[i].returning_flight.aircraft} <br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.to_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].returning_flight.departure_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.from_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].returning_flight.arrival_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p> {arr[i].returning_flight.duration.days + ' day(s) ' + arr[i].returning_flight.duration.h + ' hours'}</p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
+							  <p> {'.'} </p>
+							</div>
 						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> Singapore (SIN)14:25
-							Friday, 18 May 18</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> 21hrs 50mins Multi Stop</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
-						  <p className="w3-text-red w3-large"> BDT 139327.87</p>
-						  <p><button className="w3-button w3-ripple w3-red w3-round">Buy</button></p>
-						</div>
-					</div>
-					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
-						<div className="w3-col w3-center w3-padding" style={wd_20}>
-						  <p>
-							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
-						  </p>
-						  <p>
-							China Eastern Airlines - 2036 <br/>
-							Aircraft: 73H <br/>
-						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p>
-							Dhaka (DAC)14:35
-							Thursday, 17 May 18
-						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> Singapore (SIN)14:25
-							Friday, 18 May 18</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> 21hrs 50mins Multi Stop</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
-						  <p className="w3-text-red w3-large"> BDT 139327.87</p>
-						  <p><button className="w3-button w3-ripple w3-red w3-round">Buy</button></p>
-						</div>
-					</div>
-					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
-						<div className="w3-col w3-center w3-padding" style={wd_20}>
-						  <p>
-							<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
-						  </p>
-						  <p>
-							China Eastern Airlines - 2036 <br/>
-							Aircraft: 73H <br/>
-						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p>
-							Dhaka (DAC)14:35
-							Thursday, 17 May 18
-						  </p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> Singapore (SIN)14:25
-							Friday, 18 May 18</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
-						  <p> 21hrs 50mins Multi Stop</p>
-						</div>
-						<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
-						  <p className="w3-text-red w3-large"> BDT 139327.87</p>
-						  <p><button className="w3-button w3-ripple w3-red w3-round">Buy</button></p>
-						</div>
-					</div>
+					);
+				}
+				else{
+					eachOpt.push(
+						<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green">
+							<div className="w3-col w3-center w3-padding" style={wd_20}>
+							  <p>
+								<img className="w3-image" src="\images\emirates.JPG" height="50px" width="50px" />
+							  </p>
+							  <p>
+								{arr[i].operated_by + ' ' + arr[i].flight_code} <br/>
+								{'Aircraft: ' + arr[i].aircraft} <br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.from_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].departure_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p>{this.getCity(this.state.lastSearch.to_place)}</p>
+							  <p>
+								{'Date and Time:'}<br/>
+								{arr[i].arrival_time}<br/>
+							  </p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-padding" style={wd_20}>
+							  <p> {arr[i].duration.days+ ' day(s) ' + arr[i].duration.h + ' hours'}</p>
+							</div>
+							<div className="w3-col w3-center sm-margin-left w3-pading" style={wd_1972}>
+							  <p className="w3-text-red w3-large"> {"BDT "+ arr[i].total_fare}</p>
+							  <p><button className="w3-button w3-hover-green w3-red w3-round" onClick={this.setBook.bind(this,i)}>
+									Book
+							  </button></p>
+							</div>
+						</div>	
+					);
+				}
+			}
+			if(eachOpt.length == 0){
+				eachOpt.push(
+					<div className="w3-row w3-card w3-black w3-border-bottom w3-border-green w3-center">
+						<h2>{"Sorry, We could not find a flight as per your requirement"}</h2>
+					</div>	
+				);
+			}
+			ret=(
+				<div className="w3-container">
+					{tableHeader}
+					{eachOpt}
 				</div>
 			);
 		}
-
 		return ret;
 	}
 	genSug(e){
-		console.log(e.target.value);
-		var qry=e.target.value;
-		var airports=["Dhaka", "Chittagong", "NewYork", "Melbourne"];
-		
+		console.log(e.target.value);		
+	}
+	arriving_airports(){
+		var jsObj={
+			"search" : ""
+		};
+		var base="https://www.mawabd.com/flightHotelBooking/public/";
+		var req="api/search/airport";
+		var full_url=base+req;
+		$.ajax({
+			url: full_url,
+			type: 'POST',
+			accepts: 'application/json',
+			data:jsObj,
+			dataType:'json',
+			crossDomain:'true',
+			success: function(result, status, XHR){
+				//console.log(result);
+				var eachItem=[];
+				var len=result.length;
+				for (var i=0; i < len; i++){
+					eachItem.push(<option value={result[i].id+". " + result[i].city + " " + result[i].name + " "+result[i].country} />);
+				}
+				var outerLayer=(
+					<datalist key={1} id="a_airports">
+					{eachItem}
+					</datalist>
+				);
+				this.setState({
+					arrive_list:outerLayer,
+					arrive_list_load:1
+				});
+				
+			}.bind(this),
+			error: function(xhr){
+				console.log("error");
+			}.bind(this)
+		});
+	}
+	departing_airports(){
+		//console.log("I was called");
+		var jsObj={
+			"search" : ""
+		};
+		var base="https://www.mawabd.com/flightHotelBooking/public/";
+		var req="api/search/airport";
+		var full_url=base+req;
+		$.ajax({
+			url: full_url,
+			type: 'POST',
+			accepts: 'application/json',
+			data:jsObj,
+			dataType:'json',
+			crossDomain:'true',
+			success: function(result, status, XHR){
+				//console.log(result);
+				var eachItem=[];
+				var len=result.length;
+				for (var i=0; i < len; i++)
+				{
+					eachItem.push(<option value={result[i].id+". " + result[i].city + " " + result[i].name + " "+result[i].country} />);
+					//console.log(result[i].id+". " + result[i].city + " " + result[i].name + " "+result[i].country);
+				}
+				var outerLayer=(
+					<datalist key={2} id="d_airports">
+					{eachItem}
+					</datalist>
+				);
+				this.setState({
+					depart_list:outerLayer,
+					depart_list_load:1
+				});
+				
+			}.bind(this),
+			error: function(xhr){
+				console.log("error");
+				console.log(xhr);
+
+			}.bind(this)
+		});		
 	}
 	render_Search(){
 		var mxWidthStyle={
@@ -251,17 +477,13 @@ class FlightSearch extends Component{
 						<div className="w3-row-padding marge016">
 							<div className="w3-half">
 							  <label>From</label>
-							  <input className="w3-input w3-border" list="airports" placeholder="Departing from" autocomplete="off" id="from_" required/>
-							  <datalist id="airports">
-							  <option value="Dhaka"/>
-							  <option value="Melbourne"/>
-							  <option value="Miami"/>
-							  <option value="Denmark"/>
-							  </datalist>
+							  <input className="w3-input w3-border" list="d_airports" placeholder="Departing from" autoComplete="off" id="from_" required/>
+							  {this.state.depart_list}
 							</div>
 							<div className="w3-half">
 							  <label>To</label>
-							  <input className="w3-input w3-border" type="text" placeholder="Arriving at" id="to_" required/>
+							  <input className="w3-input w3-border" list="a_airports" placeholder="Arriving at" autoComplete="off" id="to_" required/>
+							  {this.state.arrive_list}
 							</div>
 						</div>
 						<br/>
@@ -356,16 +578,23 @@ class FlightSearch extends Component{
 		return;
 	}
 	render(){
+		if(this.state.arrive_list_load === 0){
+			this.arriving_airports();
+		}
+		if(this.state.depart_list_load === 0){
+			this.departing_airports();
+		}
 		return(
-			<div >
-				<div>
-					{this.render_Search()}
-				</div>
-				<div id='resultList'>
-					{this.render_SearchResult()}
-				</div>
+		<div >
+			<div>
+				{this.render_Search()}
 			</div>
-		)
+			<div id='resultList'>
+				{this.render_SearchResult()}
+			</div>
+		</div>
+		);
+
 		
 	}
 }

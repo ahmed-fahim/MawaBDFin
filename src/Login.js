@@ -86,7 +86,7 @@ class Login extends Component{
 					err_msg:"Wrong Email or Password!!"
 				});
 				flag=0;
-			}
+			}.bind(this)
 		});
 					
 		if(flag==0){
