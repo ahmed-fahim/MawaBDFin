@@ -7,13 +7,10 @@ import { createHashHistory } from 'history';
 export const history = createHashHistory();
 
 
-class Login extends Component{
+class Pwreset extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			auth:this.props.auth,
-			token:this.props.token,
-			jsresp:this.props.jsresp,
 			err:0,
 			err_msg:""
 		};
@@ -63,10 +60,9 @@ class Login extends Component{
 	formValidate(e){
 		e.preventDefault();
 		var base="https://www.mawabd.com/flightHotelBooking/public/";
-		var req="api/login";
+		var req="api/reset";
 		var full_url=base+req;
 		var jsObj={
-			"password": document.getElementById('password_').value,
 			"email": document.getElementById('email_').value
 		};
 		var flag=1;
@@ -78,20 +74,20 @@ class Login extends Component{
 			dataType:'json',
 			crossDomain:'true',
 			success: function(result, status, XHR){
-				this.processJSON(result);
-			}.bind(this),
-			error: function(xhr){
+				console.log(result);
 				this.setState({
 					err:1,
-					err_msg:"Wrong Email or Password!!"
+					err_msg:result.message
 				});
-				flag=0;
+			}.bind(this),
+			error: function(xhr){
+				console.log(xhr);
+				this.setState({
+					err:1,
+					err_msg:"Incorrect Email !!"
+				});
 			}.bind(this)
 		});
-					
-		if(flag==0){
-			return;
-		}
 	}
 	setToken(e){
 		this.props.setToken2(e);
@@ -100,13 +96,13 @@ class Login extends Component{
 		//console.log('render called');
 		return(
 			<div class="w3-container">
-				<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
+				<Topbar key={49} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
 				<div className="w3-indigo w3-container w3-center">
 				  <div className="horizontal-center">
 					<div className="w3-twothird w3-padding-32">
-					  <h2 className="barFont">Welcome At MawaBD<br/>Please Sign In</h2>
+					  <h2 className="barFont">Enter your Email Address <br/> to Reset Your Password</h2>
 					  <br/>
 					  <br/>
 					  <form onSubmit={this.formValidate} className="w3-container w3-padding-32">
@@ -115,17 +111,12 @@ class Login extends Component{
 							  <label className="w3-left barFont">Email</label> <br/>
 							  <input className="w3-input w3-card w3-white" placeholder="Your Email" type="text" id="email_" required/>
 							</div>
-							<div className="w3-bar-item">
-							  <label className="w3-left barFont">Password</label> <br/>
-							  <input className="w3-input w3-card w3-white" placeholder="Your Password" type="password" id="password_" required/>
-							</div>
 						  </div>
 						  <br/>
 						  <div className="w3-bar w3-margin-top">
-							<button className="w3-button w3-bar-item w3-blue w3-hover-red w3-round barFont" type="submit">Sign In</button>
+							<button className="w3-button w3-bar-item w3-blue w3-hover-red w3-round barFont" type="submit">Reset Password</button>
 						  </div>
 						  <br/>
-						  <Link to={'/reset/password'}>Forgot Password</Link>
 					  </form>
 					</div>
 				  </div>
@@ -135,4 +126,4 @@ class Login extends Component{
 		);
 	}
 }
-export default Login;
+export default Pwreset;

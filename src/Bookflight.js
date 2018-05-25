@@ -24,6 +24,10 @@ class Bookflight extends Component{
 		this.renderForms=this.renderForms.bind(this);
 		this.proceedBook=this.proceedBook.bind(this);
 		this.formatDate=this.formatDate.bind(this);
+		this.setLogout=this.setLogout.bind(this);
+	}
+	setLogout(){
+		this.props.setlogOut();
 	}
 	setToken(e){
 		this.props.setToken2(e);
@@ -45,7 +49,7 @@ class Bookflight extends Component{
 					<div className="w3-container w3-row ">
 					  <div className="w3-third">
 						<p>
-							<label>Title</label>
+							<label>Title*</label>
 							<select className="w3-select w3-border w3-border-blue" id={"title"+i.toString()} required >
 							  <option value="Mr">Mr</option>
 							  <option value="Ms">Ms</option>
@@ -56,13 +60,13 @@ class Bookflight extends Component{
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>First Name</label>
+						<label>First Name*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" id={"first_name"+i.toString()} required/>
 						</p>
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>Last Name</label>
+						<label>Last Name*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" id={"last_name"+i.toString()} required/>
 						</p>
 					  </div>
@@ -70,7 +74,7 @@ class Bookflight extends Component{
 					<div className="w3-container w3-row ">
 					  <div className="w3-third">
 						<p>
-						<label>Gender</label>
+						<label>Gender*</label>
 						<select className="w3-select w3-border w3-border-blue" id={"gender"+i.toString()} required>
 						  <option value="Male">Male</option>
 						  <option value="Female">Female</option>
@@ -93,7 +97,7 @@ class Bookflight extends Component{
 					<div className="w3-container w3-row ">
 					  <div className="w3-third">
 						<p>
-						<label>Age Class</label>
+						<label>Age Class*</label>
 						<select className="w3-select w3-border w3-border-blue" id={"age_class"+i.toString()}>
 						  <option value="Adult">Adult</option>
 						  <option value="Child">Child</option>
@@ -103,7 +107,7 @@ class Bookflight extends Component{
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>Nationality</label>
+						<label>Nationality*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" id={"nationality"+i.toString()} required />
 						</p>
 					  </div>
@@ -117,7 +121,7 @@ class Bookflight extends Component{
 					<div className="w3-container w3-row ">
 					  <div className="w3-third">
 						<p>
-						<label>Phone Number</label>
+						<label>Phone Number*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" placeholder="+880-1xxxxxxxxx"  id={"phone"+i.toString()} required/>
 						</p>
 					  </div>
@@ -129,7 +133,7 @@ class Bookflight extends Component{
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>Date of Birth</label>
+						<label>Date of Birth*</label>
 						<input className="w3-input w3-border w3-border-blue" type="date" id={"date_of_birth"+i.toString()} required />
 						</p>
 					  </div>
@@ -137,19 +141,19 @@ class Bookflight extends Component{
 					<div className="w3-container w3-row ">
 					  <div className="w3-third">
 						<p>
-						<label>Street</label>
+						<label>Street*</label>
 						<input className="w3-input w3-border w3-border-blue" id={"street_address"+i.toString()} type="text" required/>
 						</p>
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>City</label>
+						<label>City*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" id={"city"+i.toString()} required/>
 						</p>
 					  </div>
 					  <div className="w3-third">
 						<p>
-						<label>Country</label>
+						<label>Country*</label>
 						<input className="w3-input w3-border w3-border-blue" type="text" id={"country"+i.toString()} required />
 						</p>
 					  </div>
@@ -249,6 +253,8 @@ class Bookflight extends Component{
 			"guests":guests
 		};
 		console.log(finalObj);
+		console.log(this.state.token);
+		console.log(this.state.auth);
 		var base="https://www.mawabd.com/flightHotelBooking/public/";
 		var req="api/input/booking";
 		var full_url=base+req;
@@ -265,11 +271,13 @@ class Bookflight extends Component{
 			},
 			success: function(result, status, XHR){
 				console.log(result);
-				//this.processJSON(result);
+				window.location=('/myflights');
 			}.bind(this),
 			error: function(xhr){
 				console.log("error");
 				console.log(xhr);
+				this.setLogout();
+				window.location = ('/login');
 			}.bind(this)
 		});
 		

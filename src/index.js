@@ -6,6 +6,8 @@ import Home from './Home';
 import Login from './Login';
 import Registration from './Registration';
 import Bookflight from './Bookflight';
+import Myflight from './Myflight';
+import Pwreset from './Pwreset';
 import registerServiceWorker from './registerServiceWorker';
 import $ from 'jquery/src/jquery';
 
@@ -177,7 +179,17 @@ function renderMyFlights(){
 	if(authorized == 0){
 		return renderLogin();
 	}
-	return renderHome();
+	else{
+		return(
+			<Myflight key={27} auth={authorized} token={token} setToken2={setToken.bind(this)} jsresp={jsresponse} setlogOut={logOutHandler.bind(this)}/>
+		);
+	}
+}
+function renderPwreset(){
+	logOutHandler();
+	return (
+		<Pwreset setToken2={setToken.bind(this)} />
+	);
 }
 function renderLogout(){
 	logOutHandler();
@@ -195,6 +207,7 @@ ReactDOM.render(
 			<Route exact path={'/myflights'} 	render={renderMyFlights.bind(this)} />
 			<Route exact path={'/logout'} 		render={renderLogout.bind(this)} />
 			<Route exact path={'/bookflight'} 	render={renderFlightBook.bind(this)} />
+			<Route exact path={'/reset/password'} render={renderPwreset.bind(this)} />
 		</Switch>
 	</Router>
 	, document.getElementById('root'));
