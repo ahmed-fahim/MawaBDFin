@@ -31,9 +31,9 @@ function setToken(e){
 	jsresponse=e;
 	token=jsresponse.access_token;
 	authorized=1;
-	console.log('token paisi');
-	console.log(token);
-	console.log('here');
+	//console.log('token paisi');
+	//console.log(token);
+	//console.log('here');
 	var responseString=JSON.stringify(e);
 	setCookie("access_token", token);
 	setCookie("profile_data", responseString);
@@ -45,7 +45,7 @@ function setEntries(flight_, search_){
 	flightChoice=1;
 	setCookie('flight_', JSON.stringify(flightDetails));
 	setCookie('search_', JSON.stringify(search_));
-	console.log('Received Choice');
+	//console.log('Received Choice');
 }
 
 function checkEntries(){
@@ -59,7 +59,7 @@ function checkEntries(){
 }
 
 function precheckToken(){
-	if(checkCookie("access_token") == true){
+	if(checkCookie("access_token") == true && checkCookie("profile_data") == true){
 		jsresponse=JSON.parse(getCookie("profile_data"));
 		token=getCookie("access_token");
 		var responseString=JSON.stringify(jsresponse);
@@ -121,10 +121,10 @@ function logOutHandler(){
 				"Authorization" : 'Bearer '+token
 			},
 			success: function(result, status, XHR){
-				console.log(result);
+				//console.log(result);
 			}.bind(this),
 			error: function(xhr){
-				console.log("error");
+				//console.log("error");
 			}
 	});
 	token="";

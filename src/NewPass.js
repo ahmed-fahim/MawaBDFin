@@ -114,11 +114,11 @@ class NewPass extends Component{
 	}
 	render(){
 		return(
-			<div>
+			<div className="w3-animate-left">
 				<Topbar key={51} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
-				<div className="w3-indigo w3-container w3-center">
+				<div className="w3-red w3-container w3-center">
 				  <div className="w3-center">
 					<div className="w3-padding-32">
 					  <h2 className="barFont">{"Setup your new password"} </h2>
@@ -128,7 +128,7 @@ class NewPass extends Component{
 						  <div className="w3-bar w3-padding-left w3-padding-right">
 							<div className="w3-bar-item">
 							  <label className="w3-left barFont">New Password</label> <br/>
-							  <input className="w3-input w3-card w3-white" placeholder="Your New Password" type="password" id="pw" required/>
+							  <input className="w3-input w3-card w3-white" placeholder="Your New Password" type="password" id="pw_" required/>
 							</div>
 							<div className="w3-bar-item">
 							  <label className="w3-left barFont">Confirm New Password</label> <br/>

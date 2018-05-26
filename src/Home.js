@@ -31,7 +31,7 @@ class Home extends Component{
 	render(){
 		if(this.state.auth === 0){
 			return(
-				<div>
+				<div className="w3-animate-left">
 					<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
 					<FlightSearch key ={1} auth={0} token="" jsresp={this.state.jsresp} setEntry={this.setEntries.bind(this)}/>
 				</div>
@@ -39,7 +39,7 @@ class Home extends Component{
 		}
 		else if(this.state.auth === 1){
 			return(
-				<div>
+				<div className="w3-animate-left">
 					<Topbar key={2} auth={1} setToken2={this.setToken.bind(this)}/>
 					<FlightSearch key={2} auth={1} token={this.state.token} jsresp={this.state.jsresp} setEntry={this.setEntries.bind(this)}/>
 				</div>

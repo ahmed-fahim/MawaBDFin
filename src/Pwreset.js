@@ -95,11 +95,11 @@ class Pwreset extends Component{
 	render(){
 		//console.log('render called');
 		return(
-			<div>
+			<div className="w3-animate-left">
 				<Topbar key={49} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
-				<div className="w3-indigo w3-container w3-center">
+				<div className="w3-transparent w3-container w3-center">
 				  <div className="w3-center">
 					<div className="w3-padding-32">
 					  <h2 className="barFont">Enter your Email Address <br/> to Reset Your Password</h2>

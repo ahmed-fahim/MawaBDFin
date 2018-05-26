@@ -33,6 +33,20 @@ class Myflight extends Component{
 		this.renderGender=this.renderGender.bind(this);
 		this.renderFlightDetails=this.renderFlightDetails.bind(this);
 		this.autoCheck=this.autoCheck.bind(this);
+		this.cancelFlight = this.cancelFlight.bind(this);
+		this.showModal = this.showModal.bind(this);
+		this.hideModal=this.hideModal.bind(this);
+		this.processPayment=this.processPayment.bind(this);
+	}
+	
+	showModal(indx){
+		document.getElementById("mod"+indx).style.display="block";
+		return;
+	}
+	hideModal(indx){
+		document.getElementById("response"+indx).innerHTML="";
+		document.getElementById("mod"+indx).style.display="none";
+		return;		
 	}
 	autoCheck(inp){
 		if(inp === undefined || inp == ""){
@@ -41,6 +55,41 @@ class Myflight extends Component{
 		else{
 			return inp;
 		}
+	}
+	cancelFlight(indx){
+		console.log(indx+" Received for cancellation");
+		console.log(this.state.flights[indx]);
+		var curObj=this.state.flights[indx];
+		var person_id=0;
+		var jsObj={
+			"booking_id" : curObj.guests[person_id].booking_id
+		};
+		var base="https://www.mawabd.com/flightHotelBooking/public/";
+		var req="api/cancel/booking";
+		var full_url=base+req;
+		$.ajax({
+			url: full_url,
+			type: 'POST',
+			data:jsObj,
+			accepts: 'application/json',
+			dataType:'json',
+			crossDomain:'true',
+			headers:{
+				"Accept" : 'application/json',
+				"Authorization" : 'Bearer '+this.state.token
+			},
+			success: function(result, status, XHR){
+				console.log(result);
+				if(result.success=="true"){
+					this.loadFlights();
+				}
+			}.bind(this),
+			error: function(xhr){
+				console.log("error");
+				console.log(xhr);
+			}.bind(this)
+		});			
+		
 	}
 	renderFlightDetails(){
 		var eachItem=[];
@@ -54,23 +103,98 @@ class Myflight extends Component{
 			if(jsObj !== undefined){
 				var paybtn=(<div></div>);
 				if(jsObj.status == "pending"){
-					paybtn=(<p> <button className="w3-button w3-round w3-green w3-padding">{"Payment Portal"} </button></p>);
+					paybtn=(
+						<p> 
+							<button className="w3-button w3-round w3-green w3-hover-blue w3-padding" onClick={this.showModal.bind(this,i)}>{"Payment Portal"} </button>
+							<button className=" w3-margin-left w3-button w3-round w3-red w3-hover-blue w3-padding" onClick={this.cancelFlight.bind(this,i)}>{"Cancel Flight"} </button>
+						</p>
+					);
 				}
-				
+				var returnFlightStatus=(<span></span>);
+				if(jsObj.trip_type=="round-trip"){
+					returnFlightStatus=(
+					  <h6 className="w3-opacity"><b>Returning Flight Status <span className="w3-tag w3-red w3-round">{jsObj.returning_flight.status}</span></b></h6>
+					);
+				}
+				var indx=i;
 				eachItem.push(
 					<div className="w3-container w3-bottombar w3-border-indigo">
-					  <h5 className="w3-opacity"><b>{jsObj.departure_date+" | "+jsObj.trip_type}</b></h5>
+					  <h5 className="w3-opacity"><b>{"["+jsObj.origin.city+" to "+jsObj.destination.city+"] | "+jsObj.trip_type}</b></h5>
+					  <h6 className="w3-opacity"><b>Departing Flight Status <span className="w3-tag w3-red w3-round">{jsObj.departing_flight.status}</span></b></h6>
+					  {returnFlightStatus}
 					  <h6 className="w3-text-teal"><i className="fa fa-credit-card fa-fw w3-margin-right"></i>{"Adjusted Amount: " + jsObj.adjusted_amount + " BDT"} - <span className="w3-tag w3-teal w3-round">{jsObj.status}</span></h6>
 					  <h6 className="w3-text-teal"><i className="fa fa-calender fa-fw w3-margin-right"></i>{"Departure Date: " + jsObj.departure_date}</h6>
 					  <h6 className="w3-text-teal"><i className="fa fa-calender fa-fw w3-margin-right"></i>{"Return Date:"+ ((jsObj.trip_type=="one-way") ? "Not Requested":jsObj.return_date)}</h6>
 				      {paybtn}
 					  <hr/>
+					  <div id={"mod"+i.toString()} class="w3-modal">
+						<div class="w3-modal-content w3-animate-right w3-card-4">
+						  <header class="w3-container w3-sand w3-card"> 
+							<span 
+							class="w3-button w3-display-topright" onClick={this.hideModal.bind(this,i)}>&times;</span>
+							<h2>Bkash Payment Portal</h2>
+						  </header>
+						  <div class="w3-container w3-red w3-center w3-card">
+							<form class="w3-container w3-transparent" onSubmit={function(event){event.preventDefault(); this.processPayment(indx);}.bind(this)}>
+								<p><input class="w3-input w3-border-bottom w3-border-blue" placeholder="The Number you paid to..." id={"paid_to"+i.toString()} required/></p>
+								<p><input class="w3-input w3-border-bottom w3-border-blue" placeholder="Your Bkash Transaction ID" id={"trxid"+i.toString()} required/></p>
+								<p><button class="w3-button w3-round w3-green" type="submit"> Submit Transaction to Pay </button></p>
+							</form>
+							<p class="w3-large" id={"response"+i}></p>
+						  </div>
+						  <footer class="w3-container w3-sand w3-card">
+							<p class="w3-tiny">MawaBD Payment Portal</p>
+						  </footer>
+						</div>
+					  </div>
 					</div>					
 				);
 			}
 			
 		}
-		return eachItem;
+		return eachItem;	
+	}
+	processPayment(indx){
+		//e.preventDefault();
+		console.log(indx + " for payment");
+		var flightObj=this.state.flights[indx];
+		var jsObj={
+			"paid_to":document.getElementById("paid_to"+indx.toString()).value,
+			"trxid":document.getElementById("trxid"+indx.toString()).value,
+			"booking_id":flightObj.id
+		};
+		var base="https://www.mawabd.com/flightHotelBooking/public/";
+		var req="api/pay/booking";
+		var full_url=base+req;
+		$.ajax({
+			url: full_url,
+			type: 'POST',
+			accepts: 'application/json',
+			dataType:'json',
+			data:jsObj,
+			crossDomain:'true',
+			headers:{
+				"Accept" : 'application/json',
+				"Authorization" : 'Bearer '+this.state.token
+			},
+			success: function(result, status, XHR){
+				console.log(result);
+				if(result.success == "true"){
+					document.getElementById("response"+indx).innerHTML="Payment verification: Successful!!";
+				}
+				else{
+					if(result.error.hasOwnProperty("paid_to")){document.getElementById("response"+indx).innerHTML=result.error.paid_to[0];}
+					else{
+						document.getElementById("response"+indx).innerHTML="bKash Gateway busy. Please try again after some time";
+					}
+				}
+			}.bind(this),
+			error: function(xhr){
+				console.log("error");
+				console.log(xhr);
+				document.getElementById("response"+indx).innerHTML="Sorry, Something Went Wrong. Please try again after some time";
+			}.bind(this)
+		});
 		
 	}
 	setLogout(){
@@ -281,14 +405,14 @@ class Myflight extends Component{
 			maxWidth: "2400px"
 		};
 		return(
-		<div>
+		<div className="w3-animate-left">
 			<Topbar key={63} auth={1} setToken2={this.setToken.bind(this)}/> 
 			<div className="w3-content w3-margin-top" style={widthCSS}>
 			  <div className="w3-row-padding">
 				
 				<div className="w3-third">
 					<form onSubmit={this.updateProfile} className="w3-container">
-					<div className="w3-indigo w3-text-white w3-card-4">
+					<div className="w3-red w3-text-white w3-card-4">
 						<div className="w3-container">
 						  <h2 className="w3-text-black w3-xlarge"> <b>{this.state.jsresp.title +" "+this.state.jsresp.first_name+" "+this.state.jsresp.last_name}</b></h2>
 						  <p><b>{"Email:"}<input className="w3-transparent w3-input w3-text-black" value={this.state.jsresp.email} disabled/></b></p>
@@ -331,7 +455,7 @@ class Myflight extends Component{
 						  </div>
 						  <p>Passport Country</p>
 						  <div className="w3-padding-left w3-padding-right">
-							<p><b><input  id="passport_country_" type="text"  className="w3-transparent w3-input w3-text-black"  placeholder={this.state.jsp.passport_coumtry} /></b></p>
+							<p><b><input  id="passport_country_" type="text"  className="w3-transparent w3-input w3-text-black"  placeholder={this.state.jsp.passport_country} /></b></p>
 						  </div> 
 						  <p>Passport Expiration Date<br/><span className="w3-small">{" (Currently [Y/M/D]: " +this.state.jsp.passport_expiry+")"}</span> </p>
 						  <div className="w3-padding-left w3-padding-right">

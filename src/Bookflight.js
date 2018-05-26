@@ -42,8 +42,8 @@ class Bookflight extends Component{
 
 		for(var i=1; i <= totalCount; i++){
 			fields.push(
-				<div className="w3-card-4 w3-border w3-border-indigo w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-round-xlarge w3-margin-bottom" >
-					<div className="w3-container w3-indigo">
+				<div className="w3-card-4 w3-border w3-border-red w3-topbar w3-bottombar w3-leftbar w3-rightbar w3-round-xlarge w3-margin-bottom" >
+					<div className="w3-container w3-red">
 					  <h2>{"Passenger No. "+i}</h2>
 					</div>
 					<div className="w3-container w3-row ">
@@ -114,7 +114,7 @@ class Bookflight extends Component{
 					  <div className="w3-third">
 						<p>
 						<label>Meal Preference</label>
-						<input className="w3-input w3-border w3-border-blue" type="text" id={"meal_preference"+i.toString()} value="None" />
+						<input className="w3-input w3-border w3-border-blue" type="text" id={"meal_preference"+i.toString()} placeholder="None" />
 						</p>
 					  </div>
 					</div> 
@@ -167,7 +167,7 @@ class Bookflight extends Component{
 				<form className="w3-container" onSubmit={this.proceedBook.bind(this)}>
 					{fields}
 					<div className="w3-container w3-center w3-margin-bottom">
-					  <button className="w3-button w3-indigo w3-round w3-padding-left w3-padding-right w3-hover-deep-orange" type="submit">Submit to Book!</button>
+					  <button className="w3-button w3-red w3-round w3-padding-left w3-padding-right w3-hover-deep-orange" type="submit">Submit to Book!</button>
 					</div>
 				</form>
 			  </div>
@@ -222,6 +222,9 @@ class Bookflight extends Component{
 				jsObj.passport_number = null;
 				jsObj.passport_country = null;
 				jsObj.passport_expiry = null;
+			}
+			if(jsObj.meal_preference == "" || jsObj.meal_preference === undefined){
+				jsObj.meal_preference="None";
 			}
 			guests.push(jsObj);
 		}
@@ -286,7 +289,7 @@ class Bookflight extends Component{
 		var lft,rgt;
 		if(this.state.search_.trip_type=="one-way"){
 			lft=(
-				<ul class="w3-ul w3-card-4 w3-half w3-deep-orange">
+				<ul class="w3-ul w3-card-4 w3-half w3-black">
 					<li class="w3-bar">
 					  <div class="w3-bar-item">
 						<span class="w3-large">{"Departing Flight : "}</span><br/>
@@ -308,7 +311,7 @@ class Bookflight extends Component{
 				</ul>
 			);
 			rgt=(
-				<ul class="w3-ul w3-card-4 w3-half w3-indigo">
+				<ul class="w3-ul w3-card-4 w3-half w3-red">
 					<li class="w3-bar">
 					  <div class="w3-bar-item">
 						<span class="w3-large">{"Return Trip Status: "}</span><br/>
@@ -320,7 +323,7 @@ class Bookflight extends Component{
 		}
 		else{
 			lft=(
-				<ul class="w3-ul w3-card-4 w3-half w3-deep-orange">
+				<ul class="w3-ul w3-card-4 w3-half w3-black">
 					<li class="w3-bar">
 					  <div class="w3-bar-item">
 						<span class="w3-large">{"Departing Flight : "}</span><br/>
@@ -342,7 +345,7 @@ class Bookflight extends Component{
 				</ul>
 			);
 			rgt=(
-				<ul class="w3-ul w3-card-4 w3-half w3-indigo">
+				<ul class="w3-ul w3-card-4 w3-half w3-red">
 					<li class="w3-bar">
 					  <div class="w3-bar-item">
 						<span class="w3-large">{"Departing Flight : "}</span><br/>
@@ -373,11 +376,11 @@ class Bookflight extends Component{
 	}
 	render(){
 			return(
-				<div>
+				<div className="w3-animate-left">
 					<Topbar key={17} auth={1} setToken2={this.setToken.bind(this)}/>
 					<div className="w3-bar w3-card w3-teal w3-center w3-padding-16 w3-xlarge barFont"> {"Flight Booking Form"} </div>
 					<div className="w3-container w3-row w3-padding">
-						<ul class="w3-ul w3-card-4 w3-half w3-indigo">
+						<ul class="w3-ul w3-card-4 w3-half w3-red">
 						    <li class="w3-bar">
 							  <div class="w3-bar-item">
 								<span class="w3-large">{"Departing From"}</span><br/>
@@ -403,7 +406,7 @@ class Bookflight extends Component{
 							  </div>
 							</li>
 						</ul>
-						<ul class="w3-ul w3-card-4 w3-half w3-deep-orange">
+						<ul class="w3-ul w3-card-4 w3-half w3-black">
 						    <li class="w3-bar">
 							  <div class="w3-bar-item">
 								<span class="w3-large">{"Arriving At : "}</span><br/>

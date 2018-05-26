@@ -51,8 +51,8 @@ class Registration extends Component{
 		var ret=(<div id="g_alert"></div>);
 		if(this.state.success == 1){
 			ret=(
-				<div className="w3-panel w3-red w3-display-container" id="g_alert">
-					<span onClick={this.crossG.bind(this)} className="w3-button w3-green w3-large w3-display-topright">&times;</span>
+				<div className="w3-panel w3-green w3-display-container" id="g_alert">
+					<span onClick={this.crossG.bind(this)} className="w3-button w3-red w3-large w3-display-topright">&times;</span>
 					<h3>Registration Successful!</h3>
 					<p>{"Please check your provided email inbox to complete registration"}</p>
 				</div>
@@ -84,7 +84,7 @@ class Registration extends Component{
 				errorMSG="Both passwords must match!!";
 			}
 			else{
-				errorMSG="Sorry, Something Went Wrong";
+				errorMSG="Sorry, Something Went Wrong or this email is already registered";
 			}
 			this.setState({
 				err:1,
@@ -148,13 +148,13 @@ class Registration extends Component{
 	}
 	render(){
 		return(
-			<div>
+			<div className="w3-animate-left">
 				<Topbar key={5} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
 				{this.greenAlert()}
 				{this.uncrossG()}
-				<div className="w3-container w3-center w3-indigo">
+				<div className="w3-container w3-center w3-transparent">
 				  <div className="w3-center">
 					<div className="w3-padding-32">
 					  <h2 className="barFont">Welcome At MawaBD<br/>Fill in the following form to Sign Up</h2>

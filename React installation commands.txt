@@ -1,0 +1,11 @@
+npm install -g create-react-app
+cd "Directory"
+create-react-app appName
+cd appName
+npm install jquery --save
+npm install react-router-dom --save
+npm i react-router-dom --save
+npm install --save history
+
+//for starting the app
+npm start

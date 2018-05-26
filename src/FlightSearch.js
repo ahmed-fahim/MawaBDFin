@@ -349,7 +349,7 @@ class FlightSearch extends Component{
 				);
 			}
 			ret=(
-				<div className="w3-container">
+				<div className="w3-container w3-animate-top">
 					{tableHeader}
 					{eachOpt}
 				</div>

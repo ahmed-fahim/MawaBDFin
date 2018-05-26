@@ -36,8 +36,8 @@ class Login extends Component{
 		var ret=(<div id="alertDiv"></div>);
 		if(this.state.err == 1){
 			ret=(
-				<div className="w3-panel w3-red w3-display-container" id="alertDiv">
-					<span onClick={this.crossIt.bind(this)} className="w3-button w3-red w3-large w3-display-topright">&times;</span>
+				<div className="w3-panel w3-red w3-transparent w3-display-container" id="alertDiv">
+					<span onClick={this.crossIt.bind(this)} className="w3-button w3-red w3-transparent w3-large w3-display-topright">&times;</span>
 					<h3>Login Failed!</h3>
 					<p className="w3-text-white w3-large">{this.state.err_msg}</p>
 				</div>
@@ -99,11 +99,11 @@ class Login extends Component{
 	render(){
 		//console.log('render called');
 		return(
-			<div>
+			<div className="w3-animate-left">
 				<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
-				<div className="w3-indigo w3-container w3-center">
+				<div className="w3-transparent w3-container w3-center">
 				  <div className="w3-center">
 					<div className="w3-padding-32">
 					  <h2 className="barFont">Welcome At MawaBD<br/>Please Sign In</h2>
