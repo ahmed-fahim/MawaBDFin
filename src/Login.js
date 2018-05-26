@@ -99,13 +99,13 @@ class Login extends Component{
 	render(){
 		//console.log('render called');
 		return(
-			<div class="w3-container">
+			<div>
 				<Topbar key={1} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
 				<div className="w3-indigo w3-container w3-center">
-				  <div className="horizontal-center">
-					<div className="w3-twothird w3-padding-32">
+				  <div className="w3-center">
+					<div className="w3-padding-32">
 					  <h2 className="barFont">Welcome At MawaBD<br/>Please Sign In</h2>
 					  <br/>
 					  <br/>

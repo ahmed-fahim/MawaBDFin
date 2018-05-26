@@ -8,6 +8,7 @@ import Registration from './Registration';
 import Bookflight from './Bookflight';
 import Myflight from './Myflight';
 import Pwreset from './Pwreset';
+import NewPass from './NewPass';
 import registerServiceWorker from './registerServiceWorker';
 import $ from 'jquery/src/jquery';
 
@@ -196,6 +197,13 @@ function renderLogout(){
 	return renderHome();
 }
 
+function renderNewPass(){
+	logOutHandler();
+	return(
+		<NewPass setToken2={setToken.bind(this)} />
+	);
+	
+}
 
 
 ReactDOM.render(
@@ -208,6 +216,7 @@ ReactDOM.render(
 			<Route exact path={'/logout'} 		render={renderLogout.bind(this)} />
 			<Route exact path={'/bookflight'} 	render={renderFlightBook.bind(this)} />
 			<Route exact path={'/reset/password'} render={renderPwreset.bind(this)} />
+			<Route path = {'/change_password'} render={renderNewPass.bind(this)} />
 		</Switch>
 	</Router>
 	, document.getElementById('root'));

@@ -7,7 +7,7 @@ import { createHashHistory } from 'history';
 export const history = createHashHistory();
 
 
-class Pwreset extends Component{
+class NewPass extends Component{
 	constructor(props){
 		super(props);
 		this.state={
@@ -19,7 +19,8 @@ class Pwreset extends Component{
 		this.alertGenerate=this.alertGenerate.bind(this);
 		this.crossIt=this.crossIt.bind(this);
 		this.uncrossIt=this.uncrossIt.bind(this);
-		this.processJSON=this.processJSON.bind(this);
+		this.extractToken=this.extractToken.bind(this);
+		this.isAlphaNumeric=this.isAlphaNumeric.bind(this);
 	}
 	uncrossIt(){
 		if(this.state.err==1){
@@ -35,7 +36,7 @@ class Pwreset extends Component{
 			ret=(
 				<div className="w3-panel w3-red w3-display-container" id="alertDiv">
 					<span onClick={this.crossIt.bind(this)} className="w3-button w3-red w3-large w3-display-topright">&times;</span>
-					<h3>Password Reset Request</h3>
+					<h3>New Password Set Status</h3>
 					<p className="w3-text-white w3-large">{this.state.err_msg}</p>
 				</div>
 			);
@@ -43,29 +44,39 @@ class Pwreset extends Component{
 		}
 		return ret;
 	}
-	processJSON(jsobj){
-		console.log(jsobj);
-		if(jsobj.success == 'false'){
-			this.setState({
-				err:1,
-				err_msg:"Wrong Email or Password!!"
-			});
-			return;
+	isAlphaNumeric(inp){
+		if((inp >='a' && inp <='z') || (inp >= 'A' && inp <= 'Z') || (inp >= '0' && inp <='9') ){
+			return true;
 		}
 		else{
-			this.setToken(jsobj);
-			window.location=('/');
+			return false;
+		}
+	}
+	extractToken(){
+		var st=window.location.href;
+		var startIndex=st.lastIndexOf("change_password?token=");
+		if(startIndex != -1){
+			startIndex = startIndex + 22;
+			var returnString="";
+			while(startIndex < st.length && this.isAlphaNumeric(st[startIndex]) == true){
+				returnString = returnString+st[startIndex];
+				startIndex++;
+			}
+			return returnString;
+			
 		}
 	}
 	formValidate(e){
 		e.preventDefault();
 		var base="https://www.mawabd.com/flightHotelBooking/public/";
-		var req="api/reset";
+		var tokenString = this.extractToken();
+		var req="api/change/password";
 		var full_url=base+req;
 		var jsObj={
-			"email": document.getElementById('email_').value
+			"password": document.getElementById('pw_').value,
+			"c_password" : document.getElementById('pw2_').value,
+			"token":tokenString
 		};
-		var flag=1;
 		$.ajax({
 			url: full_url,
 			type: 'POST',
@@ -75,10 +86,19 @@ class Pwreset extends Component{
 			crossDomain:'true',
 			success: function(result, status, XHR){
 				console.log(result);
-				this.setState({
-					err:1,
-					err_msg:result.message
-				});
+				if(result.success=="true"){
+					this.setState({
+						err:1,
+						err_msg:"Password Successfully Changed"
+					});					
+				}
+				else{
+					this.setState({
+						err:1,
+						err_msg:"Something Went Wrong, please try again!!"
+					});					
+				}
+
 			}.bind(this),
 			error: function(xhr){
 				console.log(xhr);
@@ -93,28 +113,31 @@ class Pwreset extends Component{
 		this.props.setToken2(e);
 	}
 	render(){
-		//console.log('render called');
 		return(
 			<div>
-				<Topbar key={49} auth={0} setToken2={this.setToken.bind(this)}/>
+				<Topbar key={51} auth={0} setToken2={this.setToken.bind(this)}/>
 				{this.alertGenerate()}
 				{this.uncrossIt()}
 				<div className="w3-indigo w3-container w3-center">
 				  <div className="w3-center">
 					<div className="w3-padding-32">
-					  <h2 className="barFont">Enter your Email Address <br/> to Reset Your Password</h2>
+					  <h2 className="barFont">{"Setup your new password"} </h2>
 					  <br/>
 					  <br/>
 					  <form onSubmit={this.formValidate} className="w3-container w3-padding-32">
 						  <div className="w3-bar w3-padding-left w3-padding-right">
 							<div className="w3-bar-item">
-							  <label className="w3-left barFont">Email</label> <br/>
-							  <input className="w3-input w3-card w3-white" placeholder="Your Email" type="text" id="email_" required/>
+							  <label className="w3-left barFont">New Password</label> <br/>
+							  <input className="w3-input w3-card w3-white" placeholder="Your New Password" type="password" id="pw" required/>
+							</div>
+							<div className="w3-bar-item">
+							  <label className="w3-left barFont">Confirm New Password</label> <br/>
+							  <input className="w3-input w3-card w3-white" placeholder="Please type the same password again" type="password" id="pw2_" required/>
 							</div>
 						  </div>
 						  <br/>
 						  <div className="w3-bar w3-margin-top">
-							<button className="w3-button w3-bar-item w3-blue w3-hover-red w3-round barFont" type="submit">Reset Password</button>
+							<button className="w3-button w3-bar-item w3-blue w3-hover-red w3-round barFont" type="submit">Set New Password</button>
 						  </div>
 						  <br/>
 					  </form>
@@ -126,4 +149,4 @@ class Pwreset extends Component{
 		);
 	}
 }
-export default Pwreset;
+export default NewPass;

@@ -155,8 +155,8 @@ class Registration extends Component{
 				{this.greenAlert()}
 				{this.uncrossG()}
 				<div className="w3-container w3-center w3-indigo">
-				  <div className="horizontal-center">
-					<div className="w3-twothird w3-padding-32">
+				  <div className="w3-center">
+					<div className="w3-padding-32">
 					  <h2 className="barFont">Welcome At MawaBD<br/>Fill in the following form to Sign Up</h2>
 					  <br/>
 					  <br/>
